@@ -6,16 +6,7 @@ function Footer() {
     <>
       <Navbar bg="dark" variant="dark" fixed="bottom">
         <Container>
-          <Navbar.Brand href="#home">
-            <img
-              alt=""
-              src="/logo.svg"
-              width="30"
-              height="30"
-              className="d-inline-block align-top"
-            />{' '}
-            Dolly Angels
-          </Navbar.Brand>
+          <Navbar.Brand href="#home">Dolly Angels</Navbar.Brand>
         </Container>
       </Navbar>
     </>

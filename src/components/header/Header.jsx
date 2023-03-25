@@ -6,15 +6,16 @@ import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
 import GalleryCarousel from '../gallery/Gallery'
 
 import ContactUs from '../contact/ContactUs'
+import Clouds from '../clouds/Clouds'
 
 export default function Header() {
+  
   return (
     <>
-      <Router>
         <div>
-          <Navbar bg="dark" variant="dark">
+          <Navbar bg="dark" variant="dark" fixed="top">
             <Container>
-              <Navbar.Brand as={Link} to={'/home'}>
+              <Navbar.Brand as={Link} to={'home'}>
                 Dolly Angels School
               </Navbar.Brand>
               <Nav className="me-auto">
@@ -31,14 +32,6 @@ export default function Header() {
             </Container>
           </Navbar>
         </div>
-        <div>
-          <Routes>
-            <Route path="/aboutus" element={<GalleryCarousel />} />
-            <Route path="/gallery" element={<GalleryCarousel />} />
-            <Route path="/contact" element={<ContactUs />} />
-          </Routes>
-        </div>
-      </Router>
     </>
   )
 }
