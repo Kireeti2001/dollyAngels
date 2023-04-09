@@ -2,17 +2,28 @@ import Container from 'react-bootstrap/Container'
 import Nav from 'react-bootstrap/Nav'
 import Navbar from 'react-bootstrap/Navbar'
 import 'bootstrap/dist/css/bootstrap.min.css'
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'
-import GalleryCarousel from '../gallery/Gallery'
+import {  Link } from 'react-router-dom'
+import "./header.css"
 
-import ContactUs from '../contact/ContactUs'
-import Clouds from '../clouds/Clouds'
 
 export default function Header() {
   
   return (
     <>
-        <div>
+<div>
+<header>
+      <nav>
+        <a className='logo' href="/">Dolly Angels</a>
+        <ul>
+          
+          <li ><a href="/about">About Us</a></li>
+          <li ><a href="/gallery">Gallery</a></li>
+          <li ><a href="/contact">Enquiry</a></li>
+        </ul>
+      </nav>
+    </header>
+    </div>
+        {/* <div>
           <Navbar bg="dark" variant="dark" fixed="top">
             <Container>
               <Navbar.Brand as={Link} to={'home'}>
@@ -31,7 +42,7 @@ export default function Header() {
               </Nav>
             </Container>
           </Navbar>
-        </div>
+        </div> */}
     </>
   )
 }

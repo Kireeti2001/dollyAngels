@@ -12,6 +12,7 @@ import LockOutlinedIcon from '@mui/icons-material/LockOutlined'
 import Typography from '@mui/material/Typography'
 import Container from '@mui/material/Container'
 import { createTheme, ThemeProvider } from '@mui/material/styles'
+import Header from '../header/Header'
 
 const theme = createTheme()
 
@@ -26,8 +27,12 @@ export default function ContactUs() {
   }
 
   return (
+    <>
+    <Header/>
+    
     <ThemeProvider theme={theme}>
       <Container component="main" maxWidth="xs">
+      
         <CssBaseline />
         <Box
           sx={{
@@ -119,5 +124,6 @@ export default function ContactUs() {
         </Box>
       </Container>
     </ThemeProvider>
+    </>
   )
 }

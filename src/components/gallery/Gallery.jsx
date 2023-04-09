@@ -1,8 +1,11 @@
 import Carousel from 'react-bootstrap/Carousel'
+import Header from '../header/Header'
 import '/Users/kiree/Desktop/school/src/components/Media/images/cat_fishing.png'
 
 export default function GalleryCarousel() {
   return (
+    <>
+    <Header/>
     <Carousel>
       <Carousel.Item>
         <img
@@ -42,5 +45,6 @@ export default function GalleryCarousel() {
         </Carousel.Caption>
       </Carousel.Item>
     </Carousel>
+    </>
   )
 }

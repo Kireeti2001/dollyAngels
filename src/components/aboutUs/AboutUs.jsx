@@ -2,12 +2,15 @@ import React, { useState } from 'react'
 import Button from 'react-bootstrap/Button'
 import Card from 'react-bootstrap/Card'
 import Collapse from 'react-bootstrap/Collapse'
+import Header from '../header/Header'
 
 export default function AboutUs() {
   const [open, setOpen] = useState(false)
 
   return (
     <>
+    <div><Header/></div>
+    <div>
       <Button
         onClick={() => setOpen(!open)}
         aria-controls="example-collapse-text"
@@ -26,6 +29,7 @@ export default function AboutUs() {
             </Card>
           </div>
         </Collapse>
+      </div>
       </div>
     </>
   )
