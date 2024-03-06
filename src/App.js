@@ -1,32 +1,21 @@
-import React from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import './App.css'
-import AboutUs from './components/aboutUs/AboutUs'
-// import Footer from './components/footer/Footer'
-// import HomeD from './components/backStars/homeStar'
-// import Animals from './components/animals/Animals'
-// import LandingPage from './components/landingPage/LandingPage'
-import Clouds from './components/clouds/Clouds'
-import ContactUs from './components/contact/ContactUs'
-import GalleryCarousel from './components/gallery/Gallery'
-import Header from './components/header/Header'
-import HomePage from './components/home/home'
-import WaveEffectLandingPage from './components/wave/waves'
+import React from "react";
+import LandingPage from "./components/LandingPage";
 
 function App() {
   return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="" element={<WaveEffectLandingPage/>} />
-          <Route path="/home" element={<Header/>} />
-          <Route path='/about' element={<AboutUs/>}/>
-            <Route path="/gallery" element={<GalleryCarousel/>} />
-            <Route path="/contact" element={<ContactUs />} />
-        </Routes>
-      </BrowserRouter>
-    </>
-  )
+    <div>
+      <LandingPage />
+      {/* Use Switch for v5, Routes for v6+ */}
+      {/* <Switch> */}
+      {/* <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route path="/about" element={<AboutUs />} />
+        <Route path="/contact" element={<ContactUs />} />
+      </Routes> */}
+      {/* </Switch> */}
+      <main>{/* Content will be rendered here based on routing */}</main>
+    </div>
+  );
 }
 
-export default App
+export default App;
