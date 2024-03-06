@@ -51,7 +51,7 @@ const FAQ = () => {
             id="panel1d-header"
           >
             <Typography component="h3" variant="subtitle2">
-              How do I contact customer support if I have a question or issue?
+              How do I contact you ?
             </Typography>
           </AccordionSummary>
           <AccordionDetails>
@@ -60,9 +60,9 @@ const FAQ = () => {
               gutterBottom
               sx={{ maxWidth: { sm: "100%", md: "70%" } }}
             >
-              You can reach our customer support team by emailing
+              You can reach our Team by filling out Enquiry Form
               <Link> support@email.com </Link>
-              or calling our toll-free number. We&apos;re here to assist you
+              or calling our phone number. We&apos;re here to assist you
               promptly.
             </Typography>
           </AccordionDetails>

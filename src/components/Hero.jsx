@@ -42,7 +42,7 @@ const Hero = () => {
               textAlign: "center",
             }}
           >
-            Our latest&nbsp;
+            Welcome to&nbsp;
             <Typography
               component="span"
               variant="h1"
@@ -53,13 +53,14 @@ const Hero = () => {
                     : "primary.light",
               }}
             >
-              products
+              Dolly Angels
             </Typography>
           </Typography>
           <Typography variant="body1" textAlign="center" color="text.secondary">
-            Explore our cutting-edge dashboard, delivering high-quality
-            solutions tailored to your needs. <br />
-            Elevate your experience with top-tier features and services.
+            Discover a nurturing environment for your child's growth and
+            development. <br />
+            Join us in creating memorable learning experiences for your little
+            ones.
           </Typography>
           <Stack
             direction={{ xs: "column", sm: "row" }}
@@ -74,52 +75,17 @@ const Hero = () => {
               size="small"
               variant="outlined"
               aria-label="Enter your email address"
-              placeholder="Your email address"
+              placeholder="Parent's email address"
               inputProps={{
                 autocomplete: "off",
                 ariaLabel: "Enter your email address",
               }}
             />
             <Button variant="contained" color="primary">
-              Start now
+              Enroll now
             </Button>
           </Stack>
-          <Typography
-            variant="caption"
-            textAlign="center"
-            sx={{ opacity: 0.8 }}
-          >
-            By clicking &quot;Start now&quot; you agree to our&nbsp;
-            <Link href="#" color="primary">
-              Terms & Conditions
-            </Link>
-            .
-          </Typography>
         </Stack>
-        <Box
-          id="image"
-          sx={(theme) => ({
-            mt: { xs: 8, sm: 10 },
-            alignSelf: "center",
-            height: { xs: 200, sm: 700 },
-            width: "100%",
-            backgroundImage:
-              theme.palette.mode === "light"
-                ? 'url("/static/images/templates/templates-images/hero-light.png")'
-                : 'url("/static/images/templates/templates-images/hero-dark.png")',
-            backgroundSize: "cover",
-            borderRadius: "10px",
-            outline: "1px solid",
-            outlineColor:
-              theme.palette.mode === "light"
-                ? alpha("#BFCCD9", 0.5)
-                : alpha("#9CCCFC", 0.1),
-            boxShadow:
-              theme.palette.mode === "light"
-                ? `0 0 12px 8px ${alpha("#9CCCFC", 0.2)}`
-                : `0 0 24px 12px ${alpha("#033363", 0.2)}`,
-          })}
-        />
       </Container>
     </Box>
   );
