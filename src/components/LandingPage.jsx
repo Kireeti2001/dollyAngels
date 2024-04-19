@@ -19,6 +19,7 @@ import Footer from "./Footer";
 import FAQ from "./FAQ";
 import Pricing from "./Pricing";
 import { useState } from "react";
+import Gallery from "./Gallery/Gallery";
 
 function ToggleCustomTheme({ showCustomTheme, toggleCustomTheme }) {
   return (
@@ -87,7 +88,8 @@ const LandingPage = () => {
         <Divider />
         <Testimonials />
         <Divider />
-        <Highlights />
+        <Gallery />
+        {/* <Highlights /> */}
         <Divider />
         <FAQ />
         <Divider />
