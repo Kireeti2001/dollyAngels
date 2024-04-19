@@ -14,6 +14,7 @@ import MenuIcon from "@mui/icons-material/Menu";
 import ToggleColorMode from "./ToggleColorMode";
 import logo from "../dolly ads media/Logo Blue Colour.png";
 
+const formLink = "https://forms.gle/WVNsixxM78ASw3qH9";
 const logoStyle = {
   width: "80px",
   height: "auto",
@@ -133,7 +134,7 @@ const AppAppBar = ({ mode, toggleColorMode }) => {
                 variant="contained"
                 size="small"
                 component="a"
-                href="/material-ui/getting-started/templates/sign-up/"
+                href={formLink}
                 target="_blank"
               >
                 Contact Us
