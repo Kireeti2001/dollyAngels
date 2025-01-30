@@ -1,10 +1,15 @@
 {
-  "name": "school",
+  "name": "dollyAngels",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@emotion/react": "^11.11.3",
-    "@emotion/styled": "^11.11.0",
+    "@chakra-ui/icons": "^2.2.4",
+    "@chakra-ui/modal": "^2.3.1",
+    "@chakra-ui/react": "^2.10.5",
+    "@chakra-ui/theme": "^3.4.6",
+    "@chakra-ui/theme-tools": "^2.2.6",
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "^5.15.10",
     "@react-spring/web": "^9.7.3",
@@ -12,22 +17,27 @@
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.3.3",
+    "framer-motion": "^12.0.6",
     "netlify-cli": "^17.10.1",
     "react": "^18.2.0",
     "react-bootstrap": "^2.10.1",
     "react-dom": "^18.2.0",
+    "react-icons": "^5.4.0",
+    "react-particles": "^2.12.2",
     "react-responsive-carousel": "^3.2.23",
     "react-router": "^6.9.0",
-    "react-router-dom": "^6.9.0",
+    "react-router-dom": "^6.28.2",
     "react-scripts": "^5.0.1",
+    "react-spring": "^9.7.5",
     "sass": "^1.58.3",
+    "tsparticles": "^3.8.0",
+    "tsparticles-slim": "^2.12.0",
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "eslintConfig": {
     "extends": [
@@ -46,5 +56,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "^4.3.4",
+    "vite": "^6.0.11"
   }
 }

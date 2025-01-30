@@ -1,0 +1,28 @@
+.landing-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+}
+
+.landing-page h1 {
+    font-size: 3rem;
+    color: white;
+}
+
+.landing-page button {
+    padding: 15px 30px;
+    font-size: 1.5rem;
+    background-color: #ff6f61;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.landing-page button:hover {
+    transform: scale(1.1);
+}
