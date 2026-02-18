@@ -3,10 +3,10 @@ import { useCallback, useMemo } from "react";
 import Particles from "react-particles";
 import { loadSlim } from "tsparticles-slim";
 import { magicSparkles } from "../assets/styles/ParticleEffects/magicSparkles";
-import { useBreakpointValue } from "@chakra-ui/react";
+import { useMediaQuery } from "../hooks/useMediaQuery";
 
 function ParticlesBackground() {
-  const isMobile = useBreakpointValue({ base: true, md: false });
+  const isMobile = useMediaQuery("(max-width: 768px)");
   const options = useMemo(
     () =>
       isMobile

@@ -1,16 +1,5 @@
 import React from "react";
-import {
-  Box,
-  Heading,
-  Text,
-  Flex,
-  Image,
-  SimpleGrid,
-  Container,
-} from "@chakra-ui/react";
 import { motion } from "framer-motion";
-
-const MotionBox = motion(Box);
 
 const activityCards = [
   {
@@ -43,68 +32,43 @@ const events = [
 
 const container = {
   hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.1, delayChildren: 0.1 },
-  },
+  show: { opacity: 1, transition: { staggerChildren: 0.1, delayChildren: 0.1 } },
 };
 
-const item = {
-  hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0 },
-};
+const item = { hidden: { opacity: 0, y: 24 }, show: { opacity: 1, y: 0 } };
 
 function HomePage() {
   return (
-    <Box py={{ base: 8, md: 16 }} px={{ base: 4, md: 6 }}>
-      <Container maxW="container.xl">
-        <MotionBox
-          textAlign="center"
-          mb={12}
+    <div className="py-8 md:py-16 px-4 md:px-6">
+      <div className="max-w-7xl mx-auto">
+        <motion.div
+          className="text-center mb-12"
           variants={container}
           initial="hidden"
           animate="show"
         >
-          <MotionBox variants={item}>
+          <motion.div variants={item}>
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.1 }}
             >
-              <Heading
-                as="h1"
-                size="2xl"
-                mb={4}
-                bgGradient="linear(to-r, purple.600, pink.500)"
-                bgClip="text"
-                fontFamily="Fredoka One, cursive"
-              >
+              <h1 className="text-2xl md:text-3xl font-bold font-heading mb-4 bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
                 Welcome to Dolly Angels School!
-              </Heading>
+              </h1>
             </motion.div>
-          </MotionBox>
-          <MotionBox variants={item}>
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.4 }}
-            >
-              <Text fontSize="xl" color="orange.500" fontWeight="bold">
-                Where Learning is an Adventure! 🌈
-              </Text>
-            </motion.div>
-          </MotionBox>
-        </MotionBox>
+          </motion.div>
+          <motion.div variants={item}>
+            <p className="text-xl text-orange-500 font-bold">Where Learning is an Adventure! 🌈</p>
+          </motion.div>
+        </motion.div>
 
-        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8} mb={16}>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
           {activityCards.map((card, i) => (
-            <MotionBox
+            <motion.div
               key={card.title}
-              p={6}
-              borderRadius="2xl"
-              boxShadow="xl"
-              bg={card.bg}
-              color={card.color}
+              className="p-6 rounded-2xl shadow-xl text-[length:inherit]"
+              style={{ background: card.bg, color: card.color }}
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{
@@ -117,7 +81,7 @@ function HomePage() {
                 y: -8,
                 scale: 1.02,
                 rotate: 2,
-                boxShadow: "2xl",
+                boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
                 transition: { type: "spring", stiffness: 300, damping: 25 },
               }}
               whileTap={{ scale: 0.98 }}
@@ -125,39 +89,24 @@ function HomePage() {
               <motion.div
                 animate={{ rotate: [0, 5, -5, 0] }}
                 transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 2, delay: i * 0.3 }}
-                style={{ display: "inline-block" }}
+                className="inline-block"
               >
-                <Text fontSize="4xl" mb={3}>
-                  {card.emoji}
-                </Text>
+                <span className="text-4xl block mb-3">{card.emoji}</span>
               </motion.div>
-              <Heading size="md" mb={2}>
-                {card.title}
-              </Heading>
-              <Text fontSize="sm">{card.desc}</Text>
-            </MotionBox>
+              <h2 className="text-lg font-heading font-semibold mb-2">{card.title}</h2>
+              <p className="text-sm">{card.desc}</p>
+            </motion.div>
           ))}
-        </SimpleGrid>
+        </div>
 
-        <MotionBox
-          bg="white"
-          p={8}
-          borderRadius="2xl"
-          mb={12}
-          boxShadow="xl"
+        <motion.div
+          className="bg-card border border-border rounded-2xl p-8 mb-12 shadow-xl"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, type: "spring", stiffness: 150 }}
         >
-          <Heading
-            size="lg"
-            mb={6}
-            color="purple.600"
-            fontFamily="Fredoka One, cursive"
-          >
-            Upcoming Events
-          </Heading>
-          <Flex gap={4} wrap="wrap" justify="center">
+          <h2 className="text-xl font-heading font-bold text-primary mb-6">Upcoming Events</h2>
+          <div className="flex flex-wrap gap-4 justify-center">
             {events.map((ev, i) => (
               <motion.div
                 key={ev.text}
@@ -171,24 +120,16 @@ function HomePage() {
                 }}
                 whileHover={{ scale: 1.06, y: -4 }}
                 whileTap={{ scale: 0.98 }}
+                className="bg-secondary border-2 border-border rounded-xl p-4 font-semibold"
               >
-                <Box
-                  bg="purple.50"
-                  p={4}
-                  borderRadius="xl"
-                  border="2px solid"
-                  borderColor="purple.200"
-                  fontWeight="600"
-                >
-                  {ev.emoji} {ev.text}
-                </Box>
+                {ev.emoji} {ev.text}
               </motion.div>
             ))}
-          </Flex>
-        </MotionBox>
+          </div>
+        </motion.div>
 
-        <MotionBox
-          textAlign="center"
+        <motion.div
+          className="text-center"
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.9, type: "spring", stiffness: 150 }}
@@ -196,26 +137,18 @@ function HomePage() {
           <motion.div
             animate={{ y: [0, -8, 0] }}
             transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            style={{ display: "inline-block" }}
+            className="inline-block"
           >
-            <Image
+            <img
               src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=200"
               alt="Friendly School Mascot"
-              w="180px"
-              h="180px"
-              mx="auto"
-              borderRadius="full"
-              boxShadow="xl"
-              border="4px solid"
-              borderColor="purple.300"
+              className="w-[180px] h-[180px] mx-auto rounded-full shadow-xl border-4 border-purple-300"
             />
           </motion.div>
-          <Text mt={2} color="gray.600" fontWeight="bold">
-            Our friendly mascot says Hello! 👋
-          </Text>
-        </MotionBox>
-      </Container>
-    </Box>
+          <p className="mt-2 text-muted-foreground font-bold">Our friendly mascot says Hello! 👋</p>
+        </motion.div>
+      </div>
+    </div>
   );
 }
 

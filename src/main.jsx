@@ -1,15 +1,17 @@
-import React from 'react'
-import ReactDOM from 'react-dom/client'
-import { ChakraProvider } from '@chakra-ui/react'
-import { RouterProvider } from 'react-router-dom'
-import router from './router'
-import theme from './theme'
-import './assets/styles/global.css'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import { RouterProvider } from "react-router-dom";
+import router from "./router";
+import { ThemeProvider } from "./contexts/ThemeContext";
+import { ToastProvider } from "./contexts/ToastContext";
+import "./assets/styles/global.css";
 
-ReactDOM.createRoot(document.getElementById('root')).render(
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <RouterProvider router={router} />
-    </ChakraProvider>
-  </React.StrictMode>,
-)
+    <ThemeProvider>
+      <ToastProvider>
+        <RouterProvider router={router} />
+      </ToastProvider>
+    </ThemeProvider>
+  </React.StrictMode>
+);
