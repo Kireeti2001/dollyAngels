@@ -6,6 +6,7 @@ import Layout from "./pages/Layout/Layout";
 import ErrorPage from "./pages/Error/ErrorPage";
 import AboutPage from "./pages/About/AboutPage";
 import ContactPage from "./pages/Contact/ContactPage";
+import AdminGalleryPage from "./pages/Admin/AdminGalleryPage";
 
 const router = createBrowserRouter([
   {
@@ -14,25 +15,16 @@ const router = createBrowserRouter([
     errorElement: <ErrorPage />,
   },
   {
+    path: "/admin/gallery",
+    element: <AdminGalleryPage />,
+  },
+  {
     element: <Layout />,
     children: [
-      {
-        path: "/home",
-        element: <HomePage />,
-      },
-      {
-        path: "/gallery",
-        element: <GalleryPage />,
-      },
-      {
-        path: "/about",
-        element: <AboutPage />,
-      },
-      {
-        path: "/contact",
-        element: <ContactPage />,
-      },
-      // Add other routes here
+      { path: "/home", element: <HomePage /> },
+      { path: "/gallery", element: <GalleryPage /> },
+      { path: "/about", element: <AboutPage /> },
+      { path: "/contact", element: <ContactPage /> },
     ],
   },
 ]);
