@@ -3,10 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowLeft, FaArrowRight, FaTimes } from "react-icons/fa";
 import * as Dialog from "../../components/ui/dialog";
 import { Button } from "../../components/ui/button";
-import galleryData from "../../data/gallery.json";
+import { Link } from "react-router-dom";
+import { useGalleryData } from "../../hooks/useGalleryData";
+import { hasSupabase } from "../../lib/supabase";
 
 function GalleryPage() {
-  const albums = galleryData.albums || [];
+  const { albums, loading } = useGalleryData();
   const [selectedAlbumIndex, setSelectedAlbumIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [open, setOpen] = useState(false);
@@ -23,10 +25,18 @@ function GalleryPage() {
     setActiveImageIndex((prev) => (prev - 1 + currentAlbum.images.length) % currentAlbum.images.length);
   };
 
+  if (loading) {
+    return (
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <p className="text-muted-foreground">Loading gallery…</p>
+      </div>
+    );
+  }
+
   if (albums.length === 0) {
     return (
       <div className="min-h-[60vh] flex items-center justify-center">
-        <p className="text-muted-foreground">No albums yet. Add albums in src/data/gallery.json</p>
+        <p className="text-muted-foreground">No albums yet. Add albums in admin or src/data/gallery.json</p>
       </div>
     );
   }
@@ -64,7 +74,7 @@ function GalleryPage() {
             >
               <motion.div className="overflow-hidden" whileHover={{ scale: 1.05 }} transition={{ duration: 0.4 }}>
                 <img
-                  src={album.coverImage || album.images?.[0]}
+                  src={album.coverImage || album.images?.[0] || ""}
                   alt={album.title}
                   className="w-full h-[250px] object-cover"
                 />
@@ -149,6 +159,17 @@ function GalleryPage() {
             </div>
           </Dialog.DialogContent>
         </Dialog.Dialog>
+
+        {hasSupabase && (
+          <p className="text-center mt-8">
+            <Link
+              to="/admin/gallery"
+              className="text-sm text-muted-foreground hover:text-primary underline"
+            >
+              Manage gallery (admin)
+            </Link>
+          </p>
+        )}
       </div>
     </div>
   );
