@@ -1,70 +1,136 @@
-# Getting Started with Create React App
+# Dolly Angels School Website
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A colorful, lively, and animated website for Dolly Angels School — built with React, Chakra UI, Framer Motion, and Vite.
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- **Landing page** with animated gradient and floating emojis
+- **Gallery** — easy to add/rename albums via `src/data/gallery.json`
+- **About, Contact, Home** pages with playful school theme
+- **Responsive** design for mobile and desktop
+- **Particle effects** on main pages
 
-### `npm start`
+## Quick Start
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```bash
+npm install
+npm run dev
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Open [http://localhost:3000](http://localhost:3000).
 
-### `npm test`
+## Adding Gallery Albums
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+Edit `src/data/gallery.json`:
 
-### `npm run build`
+```json
+{
+  "albums": [
+    {
+      "id": "my-album",
+      "title": "Album Name",
+      "description": "Short description",
+      "coverImage": "https://... or /images/cover.jpg",
+      "images": ["url1", "url2"],
+      "date": "2024-12"
+    }
+  ]
+}
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+See [docs/GALLERY_STORAGE_STRATEGIES.md](docs/GALLERY_STORAGE_STRATEGIES.md) for more storage options.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Contact Form Setup
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+1. Go to [formspree.io](https://formspree.io) and create a free account
+2. Create a new form and copy your form ID (e.g. `xyzabc`)
+3. Create a `.env` file (copy from `.env.example`):
+   ```
+   VITE_CONTACT_API=https://formspree.io/f/YOUR_FORM_ID
+   ```
 
-### `npm run eject`
+---
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+## Hosting & Connecting Your Domain
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+You have a domain — here’s how to host and connect it.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### Option 1: Netlify (recommended, free)
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+1. **Push code to GitHub**
+   - Create a repo and push this project:
+   ```bash
+   git remote add origin https://github.com/YOUR_USERNAME/dolly-angels.git
+   git push -u origin main
+   ```
 
-## Learn More
+2. **Deploy on Netlify**
+   - Go to [netlify.com](https://netlify.com) → Sign up → “Add new site” → “Import an existing project”
+   - Connect your GitHub repo
+   - Build command: `npm run build`
+   - Publish directory: `dist`
+   - Deploy
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+3. **Connect your domain**
+   - Netlify → Site settings → Domain management → “Add custom domain”
+   - Enter your domain (e.g. `dollyangels.com`)
+   - Netlify will show DNS records. In your domain registrar:
+     - Add an **A record**: `@` → `75.2.60.5` (Netlify’s load balancer)
+     - Add a **CNAME**: `www` → `YOUR_SITE.netlify.app`
+   - Wait for DNS to propagate (minutes to 48 hours). Netlify will auto-provision SSL.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+### Option 2: Vercel
 
-### Code Splitting
+1. Push to GitHub, then go to [vercel.com](https://vercel.com)
+2. Import repo → Vercel auto-detects Vite; deploy
+3. Add domain in Project → Settings → Domains; update DNS at your registrar with the records they provide
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+### Option 3: GitHub Pages
 
-### Analyzing the Bundle Size
+1. Add `"homepage": "https://YOUR_USERNAME.github.io/dolly-angels"` to `package.json`
+2. Install: `npm i -D gh-pages`
+3. Add scripts:
+   ```json
+   "predeploy": "npm run build",
+   "deploy": "gh-pages -d dist"
+   ```
+4. In `vite.config.js` add:
+   ```js
+   base: '/dolly-angels/'
+   ```
+5. Run `npm run deploy`
+6. In repo Settings → Pages, set source to gh-pages branch
+7. For custom domain: Settings → Pages → Custom domain → add your domain and update DNS as instructed
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### Where Do You Buy/Manage Your Domain?
 
-### Making a Progressive Web App
+- **Registrars**: GoDaddy, Namecheap, Google Domains, Cloudflare, etc.
+- To connect a domain to any host (Netlify, Vercel, GitHub Pages), you edit DNS at the registrar to point to the host’s servers (they tell you exactly what to add).
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+### Summary
 
-### Advanced Configuration
+| Step | What to do |
+|------|------------|
+| 1 | Host the site (e.g. Netlify) and get a free `*.netlify.app` URL |
+| 2 | In your domain registrar’s DNS settings, add the A/CNAME records the host provides |
+| 3 | In the host’s dashboard, add your custom domain |
+| 4 | Wait for propagation; SSL is usually automatic |
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## Build & Preview
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```bash
+npm run build
+npm run preview
+```
 
-### `npm run build` fails to minify
+## Project Structure
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+```
+src/
+  data/          - gallery.json (edit to add albums)
+  pages/         - Landing, Home, Gallery, About, Contact
+  components/    - Navbar, ParticlesBackground
+  theme.js       - Chakra theme (colors, fonts)
+```

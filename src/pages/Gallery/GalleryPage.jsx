@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   Box,
   Container,
@@ -17,46 +17,39 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowLeft, FaArrowRight, FaTimes } from "react-icons/fa";
 
+// Gallery data - edit src/data/gallery.json to add/modify albums
+import galleryData from "../../data/gallery.json";
+
 function GalleryPage() {
   const { colorMode } = useColorMode();
+  const albums = galleryData.albums || [];
   const [selectedAlbumIndex, setSelectedAlbumIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-  // Example gallery items (replace with your actual data)
-  const items = [
-    {
-      title: "School Events",
-      images: [
-        "https://pixabay.com/photos/girl-afraid-library-magical-5230306/",
-        "/path/to/event2.jpg",
-        // Add more images
-      ],
-    },
-    {
-      title: "Classroom Activities",
-      images: [
-        "/path/to/activity1.jpg",
-        "/path/to/activity2.jpg",
-        // Add more images
-      ],
-    },
-    // Add more albums
-  ];
-
   const handleNextImage = () => {
-    const currentAlbum = items[selectedAlbumIndex];
+    const currentAlbum = albums[selectedAlbumIndex];
+    if (!currentAlbum?.images?.length) return;
     const nextIndex = (activeImageIndex + 1) % currentAlbum.images.length;
     setActiveImageIndex(nextIndex);
   };
 
   const handlePrevImage = () => {
-    const currentAlbum = items[selectedAlbumIndex];
+    const currentAlbum = albums[selectedAlbumIndex];
+    if (!currentAlbum?.images?.length) return;
     const prevIndex =
       (activeImageIndex - 1 + currentAlbum.images.length) %
       currentAlbum.images.length;
     setActiveImageIndex(prevIndex);
   };
+
+  if (albums.length === 0) {
+    return (
+      <Box minH="60vh" display="flex" alignItems="center" justifyContent="center">
+        <Text color="gray.500">No albums yet. Add albums in src/data/gallery.json</Text>
+      </Box>
+    );
+  }
 
   return (
     <Box
@@ -67,15 +60,21 @@ function GalleryPage() {
     >
       <Container maxW="container.xl">
         <VStack spacing={8} mb={8}>
-          <Heading
-            as="h1"
-            size="2xl"
-            color={colorMode === "light" ? "purple.600" : "purple.300"}
-            textAlign="center"
-            fontFamily="'Comic Sans MS', cursive"
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
           >
-            Our Gallery
-          </Heading>
+            <Heading
+              as="h1"
+              size="2xl"
+              color={colorMode === "light" ? "purple.600" : "purple.300"}
+              textAlign="center"
+              fontFamily="'Comic Sans MS', cursive"
+            >
+              Our Gallery
+            </Heading>
+          </motion.div>
           <Text
             fontSize="xl"
             textAlign="center"
@@ -86,15 +85,17 @@ function GalleryPage() {
         </VStack>
 
         <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
-          {items.map((album, albumIndex) => (
+          {albums.map((album, albumIndex) => (
             <motion.div
-              key={album.title}
-              whileHover={{ scale: 1.03 }}
-              transition={{ duration: 0.3 }}
+              key={album.id || album.title}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: albumIndex * 0.1 }}
+              whileHover={{ scale: 1.03, y: -5 }}
             >
               <Box
                 bg={colorMode === "light" ? "white" : "gray.800"}
-                borderRadius="lg"
+                borderRadius="xl"
                 overflow="hidden"
                 boxShadow="xl"
                 cursor="pointer"
@@ -104,14 +105,17 @@ function GalleryPage() {
                   setIsModalOpen(true);
                 }}
                 position="relative"
+                border="2px solid"
+                borderColor="transparent"
+                _hover={{ borderColor: "purple.400" }}
               >
                 <Image
-                  src={album.images[0]}
+                  src={album.coverImage || album.images?.[0]}
                   alt={album.title}
                   w="100%"
                   h="250px"
                   objectFit="cover"
-                  fallbackSrc="https://via.placeholder.com/400x250"
+                  fallbackSrc="https://via.placeholder.com/400x250?text=Photo"
                 />
                 <Box
                   position="absolute"
@@ -119,21 +123,13 @@ function GalleryPage() {
                   left={0}
                   right={0}
                   p={4}
-                  bg={colorMode === "light" ? "whiteAlpha.900" : "blackAlpha.800"}
-                  borderTop="1px solid"
-                  borderColor={colorMode === "light" ? "gray.200" : "gray.700"}
+                  bgGradient="linear(to-t, blackAlpha.800, transparent)"
                 >
-                  <Text
-                    fontWeight="bold"
-                    color={colorMode === "light" ? "gray.800" : "white"}
-                  >
+                  <Text fontWeight="bold" color="white">
                     {album.title}
                   </Text>
-                  <Text
-                    fontSize="sm"
-                    color={colorMode === "light" ? "gray.600" : "gray.300"}
-                  >
-                    {album.images.length} photos
+                  <Text fontSize="sm" color="whiteAlpha.900">
+                    {album.images?.length || 0} photos
                   </Text>
                 </Box>
               </Box>
@@ -141,7 +137,6 @@ function GalleryPage() {
           ))}
         </SimpleGrid>
 
-        {/* Image Modal */}
         <Modal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
@@ -149,12 +144,7 @@ function GalleryPage() {
           isCentered
         >
           <ModalOverlay bg="blackAlpha.900" />
-          <ModalContent
-            bg="transparent"
-            boxShadow="none"
-            mx={4}
-            position="relative"
-          >
+          <ModalContent bg="transparent" boxShadow="none" mx={4}>
             <ModalBody p={0}>
               <IconButton
                 icon={<FaTimes />}
@@ -166,8 +156,9 @@ function GalleryPage() {
                 color="white"
                 _hover={{ bg: "whiteAlpha.200" }}
                 zIndex={2}
+                aria-label="Close"
               />
-              
+
               <Box position="relative">
                 <AnimatePresence mode="wait">
                   <motion.div
@@ -178,12 +169,14 @@ function GalleryPage() {
                     transition={{ duration: 0.3 }}
                   >
                     <Image
-                      src={items[selectedAlbumIndex].images[activeImageIndex]}
+                      src={
+                        albums[selectedAlbumIndex]?.images?.[activeImageIndex]
+                      }
                       alt={`Gallery image ${activeImageIndex + 1}`}
                       w="100%"
                       h="80vh"
                       objectFit="contain"
-                      fallbackSrc="https://via.placeholder.com/800x600"
+                      fallbackSrc="https://via.placeholder.com/800x600?text=Photo"
                     />
                   </motion.div>
                 </AnimatePresence>
@@ -199,8 +192,8 @@ function GalleryPage() {
                   color="white"
                   _hover={{ bg: "blackAlpha.900" }}
                   size="lg"
+                  aria-label="Previous"
                 />
-
                 <IconButton
                   icon={<FaArrowRight />}
                   position="absolute"
@@ -212,6 +205,7 @@ function GalleryPage() {
                   color="white"
                   _hover={{ bg: "blackAlpha.900" }}
                   size="lg"
+                  aria-label="Next"
                 />
               </Box>
             </ModalBody>
