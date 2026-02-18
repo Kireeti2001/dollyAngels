@@ -1,218 +1,156 @@
 import React, { useState } from "react";
-import {
-  Box,
-  Container,
-  SimpleGrid,
-  Image,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalBody,
-  IconButton,
-  useColorMode,
-  Text,
-  Heading,
-  VStack,
-} from "@chakra-ui/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaArrowLeft, FaArrowRight, FaTimes } from "react-icons/fa";
-
-// Gallery data - edit src/data/gallery.json to add/modify albums
+import * as Dialog from "../../components/ui/dialog";
+import { Button } from "../../components/ui/button";
 import galleryData from "../../data/gallery.json";
 
 function GalleryPage() {
-  const { colorMode } = useColorMode();
   const albums = galleryData.albums || [];
   const [selectedAlbumIndex, setSelectedAlbumIndex] = useState(0);
   const [activeImageIndex, setActiveImageIndex] = useState(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
   const handleNextImage = () => {
     const currentAlbum = albums[selectedAlbumIndex];
     if (!currentAlbum?.images?.length) return;
-    const nextIndex = (activeImageIndex + 1) % currentAlbum.images.length;
-    setActiveImageIndex(nextIndex);
+    setActiveImageIndex((prev) => (prev + 1) % currentAlbum.images.length);
   };
 
   const handlePrevImage = () => {
     const currentAlbum = albums[selectedAlbumIndex];
     if (!currentAlbum?.images?.length) return;
-    const prevIndex =
-      (activeImageIndex - 1 + currentAlbum.images.length) %
-      currentAlbum.images.length;
-    setActiveImageIndex(prevIndex);
+    setActiveImageIndex((prev) => (prev - 1 + currentAlbum.images.length) % currentAlbum.images.length);
   };
 
   if (albums.length === 0) {
     return (
-      <Box minH="60vh" display="flex" alignItems="center" justifyContent="center">
-        <Text color="gray.500">No albums yet. Add albums in src/data/gallery.json</Text>
-      </Box>
+      <div className="min-h-[60vh] flex items-center justify-center">
+        <p className="text-muted-foreground">No albums yet. Add albums in src/data/gallery.json</p>
+      </div>
     );
   }
 
   return (
-    <Box
-      minH="100vh"
-      bg={colorMode === "light" ? "gray.50" : "gray.900"}
-      pt={{ base: 4, md: 8 }}
-      pb={{ base: 8, md: 16 }}
-    >
-      <Container maxW="container.xl">
-        <VStack spacing={8} mb={8}>
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Heading
-              as="h1"
-              size="2xl"
-              color={colorMode === "light" ? "purple.600" : "purple.300"}
-              textAlign="center"
-              fontFamily="'Comic Sans MS', cursive"
-            >
-              Our Gallery
-            </Heading>
-          </motion.div>
-          <Text
-            fontSize="xl"
-            textAlign="center"
-            color={colorMode === "light" ? "gray.600" : "gray.300"}
-          >
+    <div className="min-h-screen bg-muted/30 dark:bg-background pt-4 md:pt-8 pb-8 md:pb-16">
+      <div className="max-w-7xl mx-auto px-4">
+        <motion.div
+          className="text-center mb-10"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: "spring", stiffness: 200, damping: 25 }}
+        >
+          <h1 className="text-2xl font-heading font-bold text-primary">Our Gallery</h1>
+          <p className="text-lg text-muted-foreground mt-2">
             Capturing moments of learning, growth, and joy at Dolly Angels School
-          </Text>
-        </VStack>
+          </p>
+        </motion.div>
 
-        <SimpleGrid columns={{ base: 1, md: 2, lg: 3 }} spacing={8}>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {albums.map((album, albumIndex) => (
             <motion.div
               key={album.id || album.title}
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.92 }}
               animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.4, delay: albumIndex * 0.1 }}
-              whileHover={{ scale: 1.03, y: -5 }}
+              transition={{ delay: albumIndex * 0.1, type: "spring", stiffness: 200, damping: 22 }}
+              whileHover={{ y: -8, scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              className="bg-card rounded-2xl overflow-hidden shadow-xl border-2 border-transparent hover:border-primary cursor-pointer relative"
+              onClick={() => {
+                setSelectedAlbumIndex(albumIndex);
+                setActiveImageIndex(0);
+                setOpen(true);
+              }}
             >
-              <Box
-                bg={colorMode === "light" ? "white" : "gray.800"}
-                borderRadius="xl"
-                overflow="hidden"
-                boxShadow="xl"
-                cursor="pointer"
-                onClick={() => {
-                  setSelectedAlbumIndex(albumIndex);
-                  setActiveImageIndex(0);
-                  setIsModalOpen(true);
-                }}
-                position="relative"
-                border="2px solid"
-                borderColor="transparent"
-                _hover={{ borderColor: "purple.400" }}
-              >
-                <Image
+              <motion.div className="overflow-hidden" whileHover={{ scale: 1.05 }} transition={{ duration: 0.4 }}>
+                <img
                   src={album.coverImage || album.images?.[0]}
                   alt={album.title}
-                  w="100%"
-                  h="250px"
-                  objectFit="cover"
-                  fallbackSrc="https://via.placeholder.com/400x250?text=Photo"
+                  className="w-full h-[250px] object-cover"
                 />
-                <Box
-                  position="absolute"
-                  bottom={0}
-                  left={0}
-                  right={0}
-                  p={4}
-                  bgGradient="linear(to-t, blackAlpha.800, transparent)"
-                >
-                  <Text fontWeight="bold" color="white">
-                    {album.title}
-                  </Text>
-                  <Text fontSize="sm" color="whiteAlpha.900">
-                    {album.images?.length || 0} photos
-                  </Text>
-                </Box>
-              </Box>
+              </motion.div>
+              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
+                <p className="font-bold text-white">{album.title}</p>
+                <p className="text-sm text-white/90">{album.images?.length || 0} photos</p>
+              </div>
             </motion.div>
           ))}
-        </SimpleGrid>
+        </div>
 
-        <Modal
-          isOpen={isModalOpen}
-          onClose={() => setIsModalOpen(false)}
-          size="6xl"
-          isCentered
-        >
-          <ModalOverlay bg="blackAlpha.900" />
-          <ModalContent bg="transparent" boxShadow="none" mx={4}>
-            <ModalBody p={0}>
-              <IconButton
-                icon={<FaTimes />}
-                position="absolute"
-                right={-10}
-                top={-10}
-                onClick={() => setIsModalOpen(false)}
-                bg="transparent"
-                color="white"
-                _hover={{ bg: "whiteAlpha.200" }}
-                zIndex={2}
-                aria-label="Close"
-              />
+        <Dialog.Dialog open={open} onOpenChange={setOpen}>
+          <Dialog.DialogContent
+            className="fixed inset-0 z-50 w-full max-w-none translate-x-0 translate-y-0 border-0 bg-black/90 data-[state=open]:opacity-100 data-[state=closed]:opacity-0 flex items-center justify-center p-0"
+            onPointerDownOutside={(e) => e.preventDefault()}
+          >
+            <div className="relative w-full h-full max-h-[85vh] md:max-h-[80vh] flex items-center justify-center p-4">
+              <motion.div
+                className="absolute right-2 top-2 md:right-4 md:top-4 z-10"
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => setOpen(false)}
+                  className="rounded-full bg-black/70 text-white hover:bg-black/90"
+                  aria-label="Close"
+                >
+                  <FaTimes className="h-5 w-5" />
+                </Button>
+              </motion.div>
 
-              <Box position="relative">
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={activeImageIndex}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <Image
-                      src={
-                        albums[selectedAlbumIndex]?.images?.[activeImageIndex]
-                      }
-                      alt={`Gallery image ${activeImageIndex + 1}`}
-                      w="100%"
-                      h="80vh"
-                      objectFit="contain"
-                      fallbackSrc="https://via.placeholder.com/800x600?text=Photo"
-                    />
-                  </motion.div>
-                </AnimatePresence>
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={activeImageIndex}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  className="flex items-center justify-center"
+                >
+                  <img
+                    src={albums[selectedAlbumIndex]?.images?.[activeImageIndex]}
+                    alt={`Gallery ${activeImageIndex + 1}`}
+                    className="max-w-full max-h-[85vh] md:max-h-[80vh] object-contain"
+                  />
+                </motion.div>
+              </AnimatePresence>
 
-                <IconButton
-                  icon={<FaArrowLeft />}
-                  position="absolute"
-                  left={4}
-                  top="50%"
-                  transform="translateY(-50%)"
+              <motion.div
+                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10"
+                whileHover={{ scale: 1.15 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={handlePrevImage}
-                  bg="blackAlpha.700"
-                  color="white"
-                  _hover={{ bg: "blackAlpha.900" }}
-                  size="lg"
+                  className="rounded-full bg-black/70 text-white hover:bg-black/90"
                   aria-label="Previous"
-                />
-                <IconButton
-                  icon={<FaArrowRight />}
-                  position="absolute"
-                  right={4}
-                  top="50%"
-                  transform="translateY(-50%)"
+                >
+                  <FaArrowLeft className="h-5 w-5" />
+                </Button>
+              </motion.div>
+              <motion.div
+                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10"
+                whileHover={{ scale: 1.15 }}
+                whileTap={{ scale: 0.9 }}
+              >
+                <Button
+                  variant="ghost"
+                  size="icon"
                   onClick={handleNextImage}
-                  bg="blackAlpha.700"
-                  color="white"
-                  _hover={{ bg: "blackAlpha.900" }}
-                  size="lg"
+                  className="rounded-full bg-black/70 text-white hover:bg-black/90"
                   aria-label="Next"
-                />
-              </Box>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
-      </Container>
-    </Box>
+                >
+                  <FaArrowRight className="h-5 w-5" />
+                </Button>
+              </motion.div>
+            </div>
+          </Dialog.DialogContent>
+        </Dialog.Dialog>
+      </div>
+    </div>
   );
 }
 
