@@ -1,28 +1,93 @@
 .landing-page {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 25%, #f093fb 50%, #f5576c 75%, #4facfe 100%);
+  background-size: 400% 400%;
+  animation: gradientShift 8s ease infinite;
+  overflow: hidden;
+  position: relative;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.landing-page::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255,255,255,0.15) 0%, transparent 50%);
+  pointer-events: none;
 }
 
 .landing-page h1 {
-    font-size: 3rem;
-    color: white;
+  font-size: clamp(2rem, 6vw, 4rem);
+  color: white;
+  font-family: 'Fredoka One', cursive;
+  text-shadow: 3px 3px 0 rgba(0,0,0,0.2);
+  margin: 0;
+  z-index: 1;
+}
+
+.landing-page .subtitle {
+  font-size: clamp(1rem, 2.5vw, 1.5rem);
+  color: rgba(255,255,255,0.95);
+  font-family: 'Nunito', sans-serif;
+  margin: 1rem 0 2rem;
+  z-index: 1;
 }
 
 .landing-page button {
-    padding: 15px 30px;
-    font-size: 1.5rem;
-    background-color: #ff6f61;
-    color: white;
-    border: none;
-    border-radius: 50px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
+  padding: 18px 40px;
+  font-size: 1.4rem;
+  font-family: 'Fredoka One', cursive;
+  background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+  color: #5a3d7a;
+  border: 4px solid white;
+  border-radius: 50px;
+  cursor: pointer;
+  box-shadow: 0 8px 0 rgba(0,0,0,0.2), 0 12px 20px rgba(0,0,0,0.3);
+  transition: all 0.2s ease;
+  z-index: 1;
 }
 
 .landing-page button:hover {
-    transform: scale(1.1);
+  transform: translateY(4px);
+  box-shadow: 0 4px 0 rgba(0,0,0,0.2), 0 8px 15px rgba(0,0,0,0.3);
+}
+
+.landing-page button:active {
+  transform: translateY(8px);
+  box-shadow: 0 0 0 rgba(0,0,0,0.2);
+}
+
+/* Floating emojis */
+.landing-emoji {
+  position: absolute;
+  font-size: 2rem;
+  animation: float 4s ease-in-out infinite;
+  opacity: 0.9;
+  pointer-events: none;
+}
+
+.landing-emoji:nth-child(1) { left: 10%; top: 15%; animation-delay: 0s; }
+.landing-emoji:nth-child(2) { right: 15%; top: 25%; animation-delay: 0.5s; }
+.landing-emoji:nth-child(3) { left: 20%; bottom: 20%; animation-delay: 1s; }
+.landing-emoji:nth-child(4) { right: 10%; bottom: 30%; animation-delay: 1.5s; }
+.landing-emoji:nth-child(5) { left: 50%; top: 10%; animation-delay: 2s; }
+.landing-emoji:nth-child(6) { right: 25%; top: 60%; animation-delay: 2.5s; }
+.landing-emoji:nth-child(7) { left: 30%; top: 50%; animation-delay: 3s; }
+.landing-emoji:nth-child(8) { right: 30%; bottom: 15%; animation-delay: 3.5s; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-20px) rotate(10deg); }
 }

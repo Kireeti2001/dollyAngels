@@ -75,18 +75,17 @@ function ContactPage() {
     setIsSubmitting(true);
 
     try {
-      // Send to your backend API
-      const response = await fetch('/api/contact', {
+      // Option A: Use Formspree (free) - replace YOUR_FORM_ID with your form ID from formspree.io
+      // Option B: Use your own API - set VITE_CONTACT_API in .env
+      const apiUrl = import.meta.env.VITE_CONTACT_API || 'https://formspree.io/f/YOUR_FORM_ID';
+      const response = await fetch(apiUrl, {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
 
       if (!response.ok) throw new Error('Failed to submit');
 
-      // Show success message
       toast({
         title: 'Enquiry Submitted!',
         description: "We'll get back to you soon.",
@@ -95,7 +94,6 @@ function ContactPage() {
         isClosable: true,
       });
 
-      // Reset form
       setFormData({
         parentName: '',
         email: '',
@@ -104,11 +102,10 @@ function ContactPage() {
         childAge: '',
         message: '',
       });
-
     } catch (error) {
       toast({
         title: 'Error',
-        description: 'Failed to submit enquiry. Please try again.',
+        description: 'Set up Formspree (formspree.io) or VITE_CONTACT_API in .env. See README.',
         status: 'error',
         duration: 5000,
         isClosable: true,

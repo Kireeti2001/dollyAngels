@@ -127,7 +127,7 @@ function AboutPage() {
             </Box>
             <Box>
               <Image
-                src="/images/school-building.jpg" // Add your school image
+                src="https://images.unsplash.com/photo-1580582932707-520aed937b7b?w=600"
                 alt="Dolly Angels School Building"
                 borderRadius="lg"
                 boxShadow="2xl"

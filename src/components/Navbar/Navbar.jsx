@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Box, Flex, Link, Button, useColorMode, Text } from "@chakra-ui/react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaHome, FaInfoCircle, FaImages, FaEnvelope, FaMoon, FaSun, FaBars } from "react-icons/fa";
+import { FaHome, FaInfoCircle, FaImages, FaEnvelope, FaMoon, FaSun, FaBars, FaTimes } from "react-icons/fa";
 
 function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
@@ -105,11 +105,14 @@ function Navbar() {
                 transition={{ duration: 0.2 }}
               >
                 <Box
-                  as={FaBars}
-                  size="20px"
+                  as="button"
                   cursor="pointer"
                   onClick={() => setIsExpanded(true)}
-                />
+                  p={2}
+                  aria-label="Open menu"
+                >
+                  <FaBars size={20} />
+                </Box>
               </motion.div>
             )}
           </AnimatePresence>
@@ -125,18 +128,31 @@ function Navbar() {
                 style={{
                   display: 'flex',
                   width: '100%',
-                  justifyContent: 'space-between', // Changed to space-between
+                  justifyContent: 'space-between',
                   alignItems: 'center',
                   padding: '0 10px'
                 }}
               >
-                <Flex gap={4}> {/* Added gap between menu items */}
-                  {menuItems.map((item) => (
+                <Box
+                  as="button"
+                  onClick={() => setIsExpanded(false)}
+                  p={2}
+                  mr={2}
+                  aria-label="Close menu"
+                  _hover={{ opacity: 0.8 }}
+                >
+                  <FaTimes size={18} />
+                </Box>
+                <Flex gap={4}>
+                  {menuItems.map((item) => {
+                    const IconComponent = item.icon;
+                    return (
                     <Link
                       key={item.path}
                       as={RouterLink}
                       to={item.path}
                       style={{ textDecoration: 'none' }}
+                      onClick={() => setIsExpanded(false)}
                     >
                       <Flex
                         align="center"
@@ -151,9 +167,9 @@ function Navbar() {
                           color: "white",
                           transform: "translateY(-2px)",
                         }}
-                        minW="90px" // Added minimum width
+                        minW="90px"
                       >
-                        <Box as={item.icon} size={18} /> {/* Slightly reduced icon size */}
+                        <IconComponent size={18} /> {/* Slightly reduced icon size */}
                         <motion.div
                           variants={itemVariants}
                         >
@@ -163,7 +179,8 @@ function Navbar() {
                         </motion.div>
                       </Flex>
                     </Link>
-                  ))}
+                  );
+                  })}
                 </Flex>
 
                 <motion.div

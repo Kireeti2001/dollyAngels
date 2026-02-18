@@ -1,61 +1,176 @@
+import React from "react";
+import {
+  Box,
+  Heading,
+  Text,
+  Flex,
+  Image,
+  SimpleGrid,
+  Container,
+} from "@chakra-ui/react";
+import { motion } from "framer-motion";
 
-import React from 'react';
-import { Box, Heading, Text, Button, Flex, Image, SimpleGrid } from '@chakra-ui/react';
-import { useSpring, animated } from 'react-spring';
+const MotionBox = motion(Box);
+
+const activityCards = [
+  {
+    emoji: "🎨",
+    title: "Art Zone",
+    desc: "Paint your dreams in our colorful art studio!",
+    bg: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
+    color: "#5a3d7a",
+  },
+  {
+    emoji: "🏃",
+    title: "Active Play",
+    desc: "Jump, run, and play in our safe playground!",
+    bg: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
+    color: "#2d5a4a",
+  },
+  {
+    emoji: "📚",
+    title: "Story Time",
+    desc: "Discover magical worlds through books!",
+    bg: "linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)",
+    color: "#4a2d5a",
+  },
+];
+
+const events = [
+  { emoji: "🎪", text: "School Carnival - June 15th" },
+  { emoji: "🎓", text: "Graduation Day - July 1st" },
+];
 
 function HomePage() {
-  const textAnimation = useSpring({
-    from: { opacity: 0, transform: "translateY(50px)" },
-    to: { opacity: 1, transform: "translateY(0)" },
-    delay: 500,
-  });
-
-  const buttonAnimation = useSpring({
-    from: { opacity: 0, transform: "scale(0.8)" },
-    to: { opacity: 1, transform: "scale(1)" },
-    delay: 1000,
-  });
-
   return (
-      <Box py={20} px={4}>
-        <animated.div style={textAnimation}>
-          <Heading as="h1" size="2xl" mb={4} color="purple.600" textShadow="2px 2px #ff0000">
-            Welcome to Dolly Angels School!
-          </Heading>
-          <Text fontSize="xl" mb={8} color="orange.500" fontWeight="bold">
-            Where Learning is an Adventure! 🌈
-          </Text>
-        </animated.div>
-        <SimpleGrid columns={[1, 2, 3]} spacing={10} mb={20}>
-          <Box bg="yellow.100" p={6} borderRadius="xl" boxShadow="xl">
-            <Heading color="red.500" mb={4}>🎨 Art Zone</Heading>
-            <Text color="green.700">Paint your dreams in our colorful art studio!</Text>
-          </Box>
-          <Box bg="green.100" p={6} borderRadius="xl" boxShadow="xl">
-            <Heading color="blue.600" mb={4}>🏃 Active Play</Heading>
-            <Text color="purple.800">Jump, run, and play in our safe playground!</Text>
-          </Box>
-          <Box bg="pink.100" p={6} borderRadius="xl" boxShadow="xl">
-            <Heading color="teal.600" mb={4}>📚 Story Time</Heading>
-            <Text color="orange.800">Discover magical worlds through books!</Text>
-          </Box>
+    <Box py={{ base: 12, md: 20 }} px={4}>
+      <Container maxW="container.xl">
+        <MotionBox
+          textAlign="center"
+          mb={12}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6 }}
+        >
+          <motion.div
+            initial={{ scale: 0.5, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2, type: "spring", stiffness: 200 }}
+          >
+            <Heading
+              as="h1"
+              size="2xl"
+              mb={4}
+              bgGradient="linear(to-r, purple.600, pink.500)"
+              bgClip="text"
+              fontFamily="Fredoka One, cursive"
+            >
+              Welcome to Dolly Angels School!
+            </Heading>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.5 }}
+          >
+            <Text fontSize="xl" color="orange.500" fontWeight="bold">
+              Where Learning is an Adventure! 🌈
+            </Text>
+          </motion.div>
+        </MotionBox>
+
+        <SimpleGrid columns={{ base: 1, md: 3 }} spacing={8} mb={16}>
+          {activityCards.map((card, i) => (
+            <MotionBox
+              key={card.title}
+              p={6}
+              borderRadius="2xl"
+              boxShadow="xl"
+              bg={card.bg}
+              color={card.color}
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3 + i * 0.1 }}
+              whileHover={{
+                scale: 1.05,
+                rotate: 2,
+                boxShadow: "2xl",
+              }}
+            >
+              <Text fontSize="4xl" mb={3}>
+                {card.emoji}
+              </Text>
+              <Heading size="md" mb={2}>
+                {card.title}
+              </Heading>
+              <Text fontSize="sm">{card.desc}</Text>
+            </MotionBox>
+          ))}
         </SimpleGrid>
 
-        <Box bg="red.100" p={8} borderRadius="2xl" mb={10}>
-          <Heading color="blue.800" mb={4} fontSize="3xl">Upcoming Events</Heading>
-          <Flex justify="space-around" wrap="wrap">
-            <Box bg="white" p={4} m={2} borderRadius="lg">
-              🎪 School Carnival - June 15th
-            </Box>
-            <Box bg="white" p={4} m={2} borderRadius="lg">
-              🎓 Graduation Day - July 1st
-            </Box>
+        <MotionBox
+          bg="white"
+          p={8}
+          borderRadius="2xl"
+          mb={12}
+          boxShadow="xl"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.7 }}
+        >
+          <Heading
+            size="lg"
+            mb={6}
+            color="purple.600"
+            fontFamily="Fredoka One, cursive"
+          >
+            Upcoming Events
+          </Heading>
+          <Flex gap={4} wrap="wrap" justify="center">
+            {events.map((ev, i) => (
+              <motion.div
+                key={ev.text}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.98 }}
+              >
+                <Box
+                  bg="purple.50"
+                  p={4}
+                  borderRadius="lg"
+                  border="2px solid"
+                  borderColor="purple.200"
+                  fontWeight="600"
+                >
+                  {ev.emoji} {ev.text}
+                </Box>
+              </motion.div>
+            ))}
           </Flex>
-        </Box>
+        </MotionBox>
 
-        <Image src="/images/school-mascot.png" alt="Friendly Mascot" w="200px" mx="auto" 
-               className="bounce" />
-      </Box>
+        <MotionBox
+          textAlign="center"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.9 }}
+        >
+          <Image
+            src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=200"
+            alt="Friendly School Mascot"
+            w="180px"
+            h="180px"
+            mx="auto"
+            borderRadius="full"
+            boxShadow="xl"
+            border="4px solid"
+            borderColor="purple.300"
+          />
+          <Text mt={2} color="gray.600" fontWeight="bold">
+            Our friendly mascot says Hello! 👋
+          </Text>
+        </MotionBox>
+      </Container>
+    </Box>
   );
 }
 

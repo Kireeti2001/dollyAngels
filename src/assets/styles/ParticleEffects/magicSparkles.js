@@ -14,7 +14,7 @@ export const magicSparkles = {
       type: "circle",
     },
     opacity: {
-      value: 0.5,
+      value: 0.35,
       random: true,
     },
     size: {
