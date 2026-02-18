@@ -1,213 +1,219 @@
-import React, { useState } from "react";
-import { Box, Flex, Link, Button, useColorMode, Text } from "@chakra-ui/react";
+import React from "react";
+import {
+  Box,
+  Flex,
+  Link,
+  Button,
+  useColorMode,
+  Text,
+  useDisclosure,
+  Drawer,
+  DrawerBody,
+  DrawerHeader,
+  DrawerOverlay,
+  DrawerContent,
+  DrawerCloseButton,
+  VStack,
+  Icon,
+  useBreakpointValue,
+} from "@chakra-ui/react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaHome, FaInfoCircle, FaImages, FaEnvelope, FaMoon, FaSun, FaBars, FaTimes } from "react-icons/fa";
+import { FaHome, FaInfoCircle, FaImages, FaEnvelope, FaMoon, FaSun, FaBars } from "react-icons/fa";
+
+const menuItems = [
+  { path: "/home", icon: FaHome, text: "Home" },
+  { path: "/about", icon: FaInfoCircle, text: "About" },
+  { path: "/gallery", icon: FaImages, text: "Gallery" },
+  { path: "/contact", icon: FaEnvelope, text: "Contact" },
+];
 
 function Navbar() {
   const { colorMode, toggleColorMode } = useColorMode();
   const location = useLocation();
-  const [isExpanded, setIsExpanded] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const isMobile = useBreakpointValue({ base: true, md: false });
 
-  const menuItems = [
-    { path: "/home", icon: FaHome, text: "Home" },
-    { path: "/about", icon: FaInfoCircle, text: "About" },
-    { path: "/gallery", icon: FaImages, text: "Gallery" },
-    { path: "/contact", icon: FaEnvelope, text: "Contact" },
-  ];
+  const navBg = colorMode === "light" ? "white" : "gray.800";
+  const navColor = colorMode === "light" ? "gray.800" : "white";
+  const borderColor = colorMode === "light" ? "purple.200" : "purple.700";
 
-  const navbarVariants = {
-    collapsed: {
-      width: "60px",
-      transition: {
-        duration: 0.4,
-        type: "spring",
-        stiffness: 400,
-        damping: 40
-      }
-    },
-    expanded: {
-      width: "500px", // Increased width
-      transition: {
-        duration: 0.4,
-        type: "spring",
-        stiffness: 400,
-        damping: 40
-      }
-    }
-  };
-
-  const itemVariants = {
-    collapsed: {
-      opacity: 0,
-      transition: {
-        duration: 0.2
-      }
-    },
-    expanded: {
-      opacity: 1,
-      transition: {
-        duration: 0.2,
-        delay: 0.2
-      }
-    }
+  const NavLink = ({ item }) => {
+    const IconComponent = item.icon;
+    const isActive = location.pathname === item.path;
+    return (
+      <Link
+        as={RouterLink}
+        to={item.path}
+        display="flex"
+        alignItems="center"
+        gap={2}
+        px={4}
+        py={3}
+        borderRadius="xl"
+        bg={isActive ? "purple.500" : "transparent"}
+        color={isActive ? "white" : navColor}
+        _hover={{ bg: isActive ? "purple.600" : "purple.50", color: isActive ? "white" : "purple.700" }}
+        fontWeight="semibold"
+        textDecoration="none"
+        minH="44px"
+        onClick={isMobile ? onClose : undefined}
+        position="relative"
+        sx={{ _dark: { _hover: { bg: isActive ? "purple.600" : "whiteAlpha.100" } } }}
+      >
+        <motion.span
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
+          style={{ display: "flex", alignItems: "center" }}
+        >
+          <Icon as={IconComponent} boxSize={5} />
+        </motion.span>
+        <span>{item.text}</span>
+        {isActive && (
+          <motion.span
+            layoutId="nav-pill"
+            style={{
+              position: "absolute",
+              bottom: 4,
+              left: 8,
+              right: 8,
+              height: 3,
+              borderRadius: "full",
+              background: "white",
+              opacity: 0.9,
+            }}
+            transition={{ type: "spring", stiffness: 380, damping: 30 }}
+          />
+        )}
+      </Link>
+    );
   };
 
   return (
-    <Box
-      position="fixed"
-      top={4}
-      left={4}
-      zIndex={1000}
-    >
-      <motion.div
-        initial="collapsed"
-        animate={isExpanded ? "expanded" : "collapsed"}
-        variants={navbarVariants}
-        onHoverStart={() => setIsExpanded(true)}
-        onHoverEnd={() => setIsExpanded(false)}
+    <>
+      <Box
+        as="header"
+        position="fixed"
+        top={0}
+        left={0}
+        right={0}
+        zIndex={1000}
+        bg={navBg}
+        borderBottomWidth="1px"
+        borderColor={borderColor}
+        boxShadow="soft"
       >
         <Flex
-          as="nav"
-          bg={colorMode === "light" ? "white" : "gray.800"}
-          color={colorMode === "light" ? "gray.800" : "white"}
-          borderRadius="full"
-          boxShadow="lg"
-          minH="50px"
+          maxW="container.xl"
+          mx="auto"
+          px={{ base: 4, md: 6 }}
+          py={3}
           align="center"
-          position="relative"
-          overflow="hidden"
-          border="2px solid"
-          borderColor={colorMode === "light" ? "purple.200" : "purple.700"}
-          px={4} // Added horizontal padding
-          py={2} // Added vertical padding
-          _before={{
-            content: '""',
-            position: "absolute",
-            top: -2,
-            right: -2,
-            bottom: -2,
-            left: -2,
-            background: "linear-gradient(45deg, #FF0080, #7928CA)",
-            borderRadius: "full",
-            zIndex: -1,
-            filter: "blur(8px)",
-            opacity: 0.3,
-          }}
+          justify="space-between"
+          minH={{ base: "56px", md: "64px" }}
         >
-          {/* Hamburger Icon */}
-          <AnimatePresence>
-            {!isExpanded && (
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.2 }}
+          <Link
+            as={RouterLink}
+            to="/home"
+            display="flex"
+            alignItems="center"
+            textDecoration="none"
+            _hover={{ textDecoration: "none" }}
+          >
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.98 }}
+              transition={{ type: "spring", stiffness: 400, damping: 20 }}
+            >
+              <Text
+                fontSize={{ base: "xl", md: "2xl" }}
+                fontWeight="bold"
+                fontFamily="Fredoka One, cursive"
+                bgGradient="linear(to-r, purple.500, pink.500)"
+                bgClip="text"
               >
-                <Box
-                  as="button"
-                  cursor="pointer"
-                  onClick={() => setIsExpanded(true)}
-                  p={2}
+                Dolly Angels
+              </Text>
+            </motion.div>
+          </Link>
+
+          {isMobile ? (
+            <Flex align="center" gap={2}>
+              <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                <Button
+                  aria-label="Toggle theme"
+                  size="sm"
+                  variant="ghost"
+                  onClick={toggleColorMode}
+                  minW="44px"
+                  minH="44px"
+                >
+                  {colorMode === "light" ? <FaMoon size={20} /> : <FaSun size={20} />}
+                </Button>
+              </motion.div>
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button
                   aria-label="Open menu"
+                  variant="ghost"
+                  onClick={onOpen}
+                  minW="44px"
+                  minH="44px"
+                  fontSize="xl"
                 >
-                  <FaBars size={20} />
-                </Box>
+                  <FaBars />
+                </Button>
               </motion.div>
-            )}
-          </AnimatePresence>
-
-          {/* Menu Items */}
-          <AnimatePresence>
-            {isExpanded && (
-              <motion.div
-                variants={itemVariants}
-                initial="collapsed"
-                animate="expanded"
-                exit="collapsed"
-                style={{
-                  display: 'flex',
-                  width: '100%',
-                  justifyContent: 'space-between',
-                  alignItems: 'center',
-                  padding: '0 10px'
-                }}
-              >
-                <Box
-                  as="button"
-                  onClick={() => setIsExpanded(false)}
-                  p={2}
-                  mr={2}
-                  aria-label="Close menu"
-                  _hover={{ opacity: 0.8 }}
+            </Flex>
+          ) : (
+            <Flex align="center" gap={1}>
+              {menuItems.map((item) => (
+                <NavLink key={item.path} item={item} />
+              ))}
+              <motion.div whileHover={{ scale: 1.08 }} whileTap={{ scale: 0.95 }}>
+                <Button
+                  aria-label="Toggle theme"
+                  size="sm"
+                  borderRadius="full"
+                  bg={colorMode === "light" ? "purple.500" : "purple.200"}
+                  color={colorMode === "light" ? "white" : "gray.800"}
+                  _hover={{ bg: colorMode === "light" ? "purple.600" : "purple.300" }}
+                  onClick={toggleColorMode}
+                  ml={2}
+                  minW="44px"
+                  minH="44px"
                 >
-                  <FaTimes size={18} />
-                </Box>
-                <Flex gap={4}>
-                  {menuItems.map((item) => {
-                    const IconComponent = item.icon;
-                    return (
-                    <Link
-                      key={item.path}
-                      as={RouterLink}
-                      to={item.path}
-                      style={{ textDecoration: 'none' }}
-                      onClick={() => setIsExpanded(false)}
-                    >
-                      <Flex
-                        align="center"
-                        justify="center"
-                        p={2}
-                        borderRadius="full"
-                        transition="all 0.3s ease"
-                        bg={location.pathname === item.path ? "purple.500" : "transparent"}
-                        color={location.pathname === item.path ? "white" : "current"}
-                        _hover={{
-                          bg: "purple.400",
-                          color: "white",
-                          transform: "translateY(-2px)",
-                        }}
-                        minW="90px"
-                      >
-                        <IconComponent size={18} /> {/* Slightly reduced icon size */}
-                        <motion.div
-                          variants={itemVariants}
-                        >
-                          <Text ml={2} fontSize="sm" fontWeight="medium" whiteSpace="nowrap">
-                            {item.text}
-                          </Text>
-                        </motion.div>
-                      </Flex>
-                    </Link>
-                  );
-                  })}
-                </Flex>
-
-                <motion.div
-                  whileHover={{ rotate: 180 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <Button
-                    onClick={toggleColorMode}
-                    size="sm"
-                    borderRadius="full"
-                    bg={colorMode === "light" ? "purple.500" : "purple.200"}
-                    color={colorMode === "light" ? "white" : "gray.800"}
-                    ml={2} // Added margin
-                    _hover={{
-                      bg: colorMode === "light" ? "purple.600" : "purple.300",
-                      transform: "translateY(-2px)",
-                    }}
-                  >
-                    {colorMode === "light" ? <FaMoon /> : <FaSun />}
-                  </Button>
-                </motion.div>
+                  {colorMode === "light" ? <FaMoon /> : <FaSun />}
+                </Button>
               </motion.div>
-            )}
-          </AnimatePresence>
+            </Flex>
+          )}
         </Flex>
-      </motion.div>
-    </Box>
+      </Box>
+
+      <Drawer placement="right" onClose={onClose} isOpen={isOpen} size="xs">
+        <DrawerOverlay />
+        <DrawerContent bg={navBg}>
+          <DrawerCloseButton size="lg" top={4} right={4} borderRadius="full" />
+          <DrawerHeader pt={10} fontFamily="Fredoka One, cursive" color="purple.600">
+            Menu
+          </DrawerHeader>
+          <DrawerBody>
+            <VStack align="stretch" spacing={1} pt={4}>
+              {menuItems.map((item, i) => (
+                <motion.div
+                  key={item.path}
+                  initial={{ opacity: 0, x: 20 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ delay: i * 0.05, type: "spring", stiffness: 200 }}
+                >
+                  <NavLink item={item} />
+                </motion.div>
+              ))}
+            </VStack>
+          </DrawerBody>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 }
 

@@ -7,33 +7,30 @@ const ErrorPage = () => {
 
   const containerVariants = {
     initial: { opacity: 0 },
-    animate: { opacity: 1, transition: { duration: 0.5 } }
+    animate: {
+      opacity: 1,
+      transition: { staggerChildren: 0.08, delayChildren: 0.1 },
+    },
   };
 
-  const pencilVariants = {
-    initial: { rotate: -45, x: -100 },
+  const itemVariants = {
+    initial: { opacity: 0, y: 16 },
     animate: {
-      rotate: 0,
-      x: 0,
-      transition: {
-        type: "spring",
-        stiffness: 100,
-        damping: 10
-      }
-    }
+      opacity: 1,
+      y: 0,
+      transition: { type: "spring", stiffness: 200, damping: 22 },
+    },
   };
 
-  const bookVariants = {
-    initial: { y: -50, rotate: -10 },
+  const bounceVariants = {
     animate: {
-      y: [0, -20, 0],
-      rotate: [-10, 10, -10],
+      y: [0, -12, 0],
       transition: {
         duration: 2,
         repeat: Infinity,
-        ease: "easeInOut"
-      }
-    }
+        ease: "easeInOut",
+      },
+    },
   };
 
   return (
@@ -41,6 +38,7 @@ const ErrorPage = () => {
       variants={containerVariants}
       initial="initial"
       animate="animate"
+      style={{ minHeight: "100vh" }}
     >
       <Box
         minH="100vh"
@@ -48,83 +46,79 @@ const ErrorPage = () => {
         flexDirection="column"
         alignItems="center"
         justifyContent="center"
-        bg="blue.50"
+        bgGradient="linear(to-b, purple.50, blue.50)"
         position="relative"
         overflow="hidden"
+        px={4}
       >
-        {/* Animated Background Elements */}
-        <Box position="absolute" width="100%" height="100%">
-          {[...Array(20)].map((_, i) => (
-            <motion.div
+        {/* Soft floating emojis */}
+        <Box position="absolute" width="100%" height="100%" overflow="hidden">
+          {[...Array(12)].map((_, i) => (
+            <motion.span
               key={i}
               style={{
                 position: "absolute",
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                fontSize: "24px"
+                left: `${10 + (i * 7) % 80}%`,
+                top: `${10 + (i * 11) % 80}%`,
+                fontSize: "1.5rem",
+                opacity: 0.4,
               }}
               animate={{
-                y: [0, -20, 0],
-                opacity: [0.3, 1, 0.3]
+                y: [0, -15, 0],
+                opacity: [0.3, 0.7, 0.3],
               }}
               transition={{
-                duration: 2 + Math.random() * 2,
+                duration: 2.5 + (i % 3) * 0.5,
                 repeat: Infinity,
-                delay: Math.random() * 2
+                delay: (i % 5) * 0.3,
               }}
             >
-              {["✏️", "📚", "🎨", "🎭", "🔢", "📝", "🌈"][Math.floor(Math.random() * 7)]}
-            </motion.div>
+              {["✏️", "📚", "🎨", "🎭", "🔢", "📝", "🌈"][i % 7]}
+            </motion.span>
           ))}
         </Box>
 
-        {/* Main Content */}
-        <Box
-          zIndex={1}
-          textAlign="center"
-          p={8}
-          bg="white"
-          borderRadius="xl"
-          boxShadow="xl"
-          maxW="600px"
-          m={4}
+        <motion.div
+          variants={itemVariants}
+          style={{
+            zIndex: 1,
+            textAlign: "center",
+            padding: "2rem",
+            background: "white",
+            borderRadius: "2rem",
+            boxShadow: "0 20px 60px -15px rgba(0,0,0,0.15)",
+            maxWidth: "min(90vw, 560px)",
+          }}
         >
-          <motion.div
-            variants={pencilVariants}
-            initial="initial"
-            animate="animate"
-          >
-            <Text fontSize="6xl">📝</Text>
+          <motion.div variants={bounceVariants} animate="animate">
+            <Text fontSize="5xl" mb={2}>
+              📝
+            </Text>
           </motion.div>
 
-          <motion.div
-            variants={bookVariants}
-            initial="initial"
-            animate="animate"
+          <Heading
+            mb={4}
+            fontSize={{ base: "2xl", md: "4xl" }}
+            color="purple.600"
+            fontFamily="heading"
           >
-            <Heading
-              mb={4}
-              fontSize="4xl"
-              color="purple.500"
-              fontFamily="Comic Sans MS, cursive"
-            >
-              Oopsie Daisy!
-            </Heading>
-          </motion.div>
+            Oopsie Daisy!
+          </Heading>
 
           <Text
-            mb={6}
+            mb={8}
             fontSize="xl"
             color="gray.600"
-            fontFamily="Comic Sans MS, cursive"
+            fontFamily="body"
           >
-            Looks like we've lost our homework! 
-            Don't worry, let's go back to class together! 🎒
+            Looks like we&apos;ve lost our homework! Don&apos;t worry, let&apos;s go back
+            to class together! 🎒
           </Text>
 
           <motion.div
-            whileHover={{ scale: 1.1 }}
-            whileTap={{ scale: 0.9 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.98 }}
+            transition={{ type: "spring", stiffness: 400, damping: 20 }}
           >
             <Button
               onClick={() => navigate("/")}
@@ -133,35 +127,26 @@ const ErrorPage = () => {
               borderRadius="full"
               px={8}
               fontSize="xl"
-              fontFamily="Comic Sans MS, cursive"
+              fontFamily="heading"
               boxShadow="lg"
-              _hover={{
-                transform: "translateY(-2px)",
-                boxShadow: "xl",
-              }}
+              _hover={{ boxShadow: "xl" }}
             >
               Back to School! 🏫
             </Button>
           </motion.div>
-        </Box>
+        </motion.div>
 
-        {/* Animated Rainbow */}
         <motion.div
           style={{
             position: "absolute",
             bottom: 0,
             width: "100%",
-            height: "10px",
-            background: "linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet)",
+            height: "8px",
+            background:
+              "linear-gradient(to right, #FF6B6B, #FFA94D, #FFE066, #69DB7C, #74C0FC, #B197FC, #F783AC)",
           }}
-          animate={{
-            opacity: [0.5, 1, 0.5],
-            scale: [1, 1.02, 1],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-          }}
+          animate={{ opacity: [0.6, 1, 0.6] }}
+          transition={{ duration: 2, repeat: Infinity }}
         />
       </Box>
     </motion.div>
