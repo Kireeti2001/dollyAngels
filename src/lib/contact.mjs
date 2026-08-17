@@ -23,9 +23,8 @@ export function validateEnquiry(formData) {
   return errors;
 }
 
-export function buildMailtoHref(formData, toEmail) {
-  const subject = encodeURIComponent(`Admission enquiry from ${formData.parentName}`);
-  const lines = [
+export function enquiryLines(formData) {
+  return [
     `Parent: ${formData.parentName}`,
     `Email: ${formData.email}`,
     `Phone: ${formData.phone}`,
@@ -34,8 +33,28 @@ export function buildMailtoHref(formData, toEmail) {
     "",
     formData.message || "(No extra message)",
   ].filter((line) => line !== null);
-  const body = encodeURIComponent(lines.join("\n"));
+}
+
+export function buildMailtoHref(formData, toEmail) {
+  const subject = encodeURIComponent(`Admission enquiry from ${formData.parentName}`);
+  const body = encodeURIComponent(enquiryLines(formData).join("\n"));
   return `mailto:${toEmail}?subject=${subject}&body=${body}`;
+}
+
+// ponytail: assumes an Indian number when only 10 digits are given. Ceiling — one
+// default country code; pass `countryCode` (or a full +CC number) for anywhere else.
+export function toWhatsAppNumber(phone, countryCode = "91") {
+  const digits = digitsOnly(phone).replace(/^0+/, "");
+  if (!digits) return "";
+  return digits.length === 10 ? `${countryCode}${digits}` : digits;
+}
+
+export function buildWhatsAppHref(formData, schoolPhone, countryCode = "91") {
+  const number = toWhatsAppNumber(schoolPhone, countryCode);
+  const text = encodeURIComponent(
+    [`Admission enquiry from ${formData.parentName}`, "", ...enquiryLines(formData)].join("\n")
+  );
+  return `https://wa.me/${number}?text=${text}`;
 }
 
 export function formatEventDate(isoDate) {

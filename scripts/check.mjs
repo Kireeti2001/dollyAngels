@@ -7,7 +7,11 @@ import {
   isContactApiConfigured,
   digitsOnly,
   buildMailtoHref,
+  buildWhatsAppHref,
+  toWhatsAppNumber,
+  enquiryLines,
 } from "../src/lib/contact.mjs";
+import { buildTemplatePayload, handler } from "../netlify/functions/enquiry.mjs";
 
 const root = join(dirname(fileURLToPath(import.meta.url)), "..");
 const school = JSON.parse(readFileSync(join(root, "src/data/school.json"), "utf8"));
@@ -41,4 +45,35 @@ assert.ok(
   )
 );
 
-console.log("ok: school data + contact helpers");
+const enquiry = {
+  parentName: "Asha",
+  email: "asha@example.com",
+  phone: "9876543210",
+  childName: "Ira",
+  childAge: "4",
+  message: "Is a tour possible on Saturday?",
+};
+
+assert.equal(toWhatsAppNumber("9876543210"), "919876543210");
+assert.equal(toWhatsAppNumber("09876543210"), "919876543210");
+assert.equal(toWhatsAppNumber("+91 98765 43210"), "919876543210");
+assert.equal(toWhatsAppNumber("9876543210", "44"), "449876543210");
+assert.equal(toWhatsAppNumber(""), "");
+assert.ok(buildWhatsAppHref(enquiry, school.contact.phone).startsWith("https://wa.me/911234567890?text="));
+assert.ok(decodeURIComponent(buildWhatsAppHref(enquiry, school.contact.phone)).includes("Child: Ira"));
+assert.ok(enquiryLines(enquiry).includes("Child's age: 4"));
+assert.ok(!enquiryLines({ ...enquiry, childName: "" }).some((l) => l.startsWith("Child:")));
+
+const payload = buildTemplatePayload("919876543210", "enquiry_received", "en", ["Asha"]);
+assert.equal(payload.messaging_product, "whatsapp");
+assert.equal(payload.template.components[0].parameters[0].text, "Asha");
+assert.equal(buildTemplatePayload("91", "t", "en").template.components, undefined);
+
+const post = (body) => handler({ httpMethod: "POST", body: JSON.stringify(body) });
+assert.equal((await handler({ httpMethod: "GET" })).statusCode, 405);
+assert.equal((await post({ parentName: "", email: "", phone: "" })).statusCode, 400);
+assert.equal((await post({ ...enquiry, message: "x".repeat(1001) })).statusCode, 400);
+// No WhatsApp/forward env in this shell, so the function must tell the site to fall back.
+assert.equal((await post(enquiry)).statusCode, 501);
+
+console.log("ok: school data + contact helpers + whatsapp enquiry function");

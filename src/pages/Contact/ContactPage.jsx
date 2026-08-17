@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaArrowRight } from "react-icons/fa";
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock, FaArrowRight, FaWhatsapp } from "react-icons/fa";
 import { useToast } from "../../contexts/ToastContext";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
@@ -12,6 +12,7 @@ import {
   validateEnquiry,
   isContactApiConfigured,
   buildMailtoHref,
+  buildWhatsAppHref,
 } from "../../lib/contact.mjs";
 
 const emptyForm = {
@@ -36,15 +37,29 @@ function ContactPage() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  const isFormValid = () => {
+    const errors = validateEnquiry(formData);
+    setFormError(errors[0] || "");
+    if (errors.length > 0) {
+      showToast({ title: "Please check the form", description: errors[0], status: "error" });
+      return false;
+    }
+    return true;
+  };
+
+  const handleWhatsApp = () => {
+    if (!isFormValid()) return;
+    window.open(buildWhatsAppHref(formData, school.contact.phone), "_blank", "noopener");
+    showToast({
+      title: "Opening WhatsApp",
+      description: "Send the message and you'll get a reply straight away.",
+      status: "success",
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errors = validateEnquiry(formData);
-    if (errors.length > 0) {
-      setFormError(errors[0]);
-      showToast({ title: "Please check the form", description: errors[0], status: "error" });
-      return;
-    }
-    setFormError("");
+    if (!isFormValid()) return;
     if (!apiReady) {
       window.location.href = buildMailtoHref(formData, school.contact.email);
       showToast({
@@ -140,6 +155,12 @@ function ContactPage() {
             <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
               {isSubmitting ? "Sending…" : apiReady ? "Submit enquiry" : "Send via email"} <FaArrowRight className="h-4 w-4" />
             </Button>
+            <Button type="button" variant="outline" size="lg" className="w-full" onClick={handleWhatsApp}>
+              <FaWhatsapp className="h-5 w-5" aria-hidden /> Send on WhatsApp
+            </Button>
+            <p className="text-xs text-muted-foreground text-center">
+              WhatsApp opens with your enquiry ready to send — you get an instant reply from us.
+            </p>
             {!apiReady && (
               <p className="text-xs text-muted-foreground text-center">
                 This opens your email app with the enquiry filled in. Set Formspree in `.env` to send from the site.
