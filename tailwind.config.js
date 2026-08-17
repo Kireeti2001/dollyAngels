@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['"Fredoka One"', '"Nunito"', "system-ui", "sans-serif"],
+        heading: ['"Fraunces"', "Georgia", "serif"],
         body: ['"Nunito"', "system-ui", "sans-serif"],
       },
       colors: {
@@ -34,6 +34,7 @@ export default {
           DEFAULT: "hsl(var(--accent))",
           foreground: "hsl(var(--accent-foreground))",
         },
+        blue: "hsl(var(--blue))",
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",
@@ -49,8 +50,9 @@ export default {
         sm: "calc(var(--radius) - 4px)",
       },
       boxShadow: {
-        soft: "0 4px 14px 0 rgba(0, 0, 0, 0.08)",
-        "soft-lg": "0 8px 30px -6px rgba(0, 0, 0, 0.1)",
+        soft: "0 4px 14px 0 rgba(18, 18, 18, 0.06)",
+        hard: "6px 6px 0 0 hsl(var(--border))",
+        "hard-sm": "3px 3px 0 0 hsl(var(--border))",
       },
     },
   },

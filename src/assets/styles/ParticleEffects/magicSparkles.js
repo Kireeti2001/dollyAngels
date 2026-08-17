@@ -1,28 +1,27 @@
 export const magicSparkles = {
   particles: {
     number: {
-      value: 80,
+      value: 26,
       density: {
         enable: true,
-        area: 800,
+        area: 900,
       },
     },
     color: {
-      value: ["#BD10E0", "#B8E986", "#50E3C2", "#FFD300", "#E86363"],
+      value: ["#FE6D2E", "#FED933", "#00AD6F", "#377EF0"],
     },
     shape: {
       type: "circle",
     },
     opacity: {
-      value: 0.35,
-      random: true,
+      value: { min: 0.15, max: 0.35 },
     },
     size: {
-      value: { min: 1, max: 3 },
+      value: { min: 1.5, max: 3.5 },
     },
     move: {
       enable: true,
-      speed: 3,
+      speed: 1.2,
       direction: "none",
       random: true,
       straight: false,
@@ -33,13 +32,6 @@ export const magicSparkles = {
     links: {
       enable: false,
     },
-    life: {
-      duration: {
-        sync: false,
-        value: 3,
-      },
-      count: 0,
-    },
   },
   interactivity: {
     events: {
@@ -47,22 +39,13 @@ export const magicSparkles = {
         enable: true,
         mode: "bubble",
       },
-      onClick: {
-        enable: true,
-        mode: "repulse",
-      },
     },
     modes: {
       bubble: {
-        distance: 250,
-        size: 0,
-        duration: 2,
-        opacity: 0,
-        speed: 3,
-      },
-      repulse: {
-        distance: 400,
-        duration: 0.4,
+        distance: 180,
+        size: 6,
+        duration: 1.5,
+        opacity: 0.5,
       },
     },
   },

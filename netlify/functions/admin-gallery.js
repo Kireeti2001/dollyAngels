@@ -41,6 +41,10 @@ exports.handler = async (event) => {
   const { action } = body;
 
   try {
+    if (action === "verify") {
+      return { statusCode: 200, body: JSON.stringify({ ok: true }) };
+    }
+
     if (action === "create_album") {
       const { title, description } = body;
       if (!title?.trim()) {

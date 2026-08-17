@@ -4,52 +4,54 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 262 83% 26%;
+    --background: 44 58% 96%;
+    --foreground: 240 8% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 262 83% 26%;
+    --card-foreground: 240 8% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 262 83% 26%;
-    --primary: 262 83% 58%;
+    --popover-foreground: 240 8% 10%;
+    --primary: 18 100% 59%;
     --primary-foreground: 0 0% 100%;
-    --secondary: 262 30% 96%;
-    --secondary-foreground: 262 83% 26%;
-    --muted: 262 20% 96%;
-    --muted-foreground: 262 10% 45%;
-    --accent: 262 30% 96%;
-    --accent-foreground: 262 83% 26%;
+    --secondary: 46 96% 62%;
+    --secondary-foreground: 240 8% 10%;
+    --muted: 42 40% 92%;
+    --muted-foreground: 240 5% 38%;
+    --accent: 150 100% 34%;
+    --accent-foreground: 0 0% 100%;
+    --blue: 215 86% 58%;
     --destructive: 0 84% 60%;
     --destructive-foreground: 0 0% 100%;
-    --border: 262 20% 90%;
-    --input: 262 20% 90%;
-    --ring: 262 83% 58%;
-    --radius: 1rem;
+    --border: 240 8% 10%;
+    --input: 240 5% 80%;
+    --ring: 18 100% 59%;
+    --radius: 1.25rem;
   }
 
   .dark {
-    --background: 262 30% 9%;
-    --foreground: 0 0% 98%;
-    --card: 262 30% 12%;
-    --card-foreground: 0 0% 98%;
-    --popover: 262 30% 12%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 262 70% 65%;
-    --primary-foreground: 262 83% 26%;
-    --secondary: 262 25% 18%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 262 25% 18%;
-    --muted-foreground: 262 15% 65%;
-    --accent: 262 25% 18%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62% 50%;
+    --background: 240 10% 8%;
+    --foreground: 44 58% 96%;
+    --card: 240 9% 12%;
+    --card-foreground: 44 58% 96%;
+    --popover: 240 9% 12%;
+    --popover-foreground: 44 58% 96%;
+    --primary: 18 100% 64%;
+    --primary-foreground: 240 10% 8%;
+    --secondary: 46 90% 55%;
+    --secondary-foreground: 240 10% 8%;
+    --muted: 240 8% 16%;
+    --muted-foreground: 44 15% 72%;
+    --accent: 150 80% 46%;
+    --accent-foreground: 240 10% 8%;
+    --blue: 215 90% 66%;
+    --destructive: 0 72% 55%;
     --destructive-foreground: 0 0% 98%;
-    --border: 262 25% 20%;
-    --input: 262 25% 20%;
-    --ring: 262 70% 65%;
+    --border: 240 8% 24%;
+    --input: 240 8% 24%;
+    --ring: 18 100% 64%;
   }
 }
 
-/* Dolly Angels – global reset, responsive base, fun/pro feel */
+/* Dolly Angels – editorial, playful, Primer-inspired */
 *,
 *::before,
 *::after {
@@ -67,6 +69,17 @@ body {
   padding: 0;
   min-height: 100vh;
   overflow-x: hidden;
+  background-image:
+    radial-gradient(circle at 12% 20%, rgba(254, 217, 51, 0.14), transparent 30%),
+    radial-gradient(circle at 88% 12%, rgba(0, 173, 111, 0.1), transparent 28%),
+    radial-gradient(circle at 80% 88%, rgba(55, 126, 240, 0.1), transparent 32%);
+}
+
+.dark body {
+  background-image:
+    radial-gradient(circle at 12% 20%, rgba(254, 217, 51, 0.08), transparent 30%),
+    radial-gradient(circle at 88% 12%, rgba(0, 173, 111, 0.07), transparent 28%),
+    radial-gradient(circle at 80% 88%, rgba(55, 126, 240, 0.08), transparent 32%);
 }
 
 #root {
@@ -90,17 +103,14 @@ iframe {
 
 #tsparticles {
   position: absolute;
-  top: 0;
-  left: 0;
+  inset: 0;
   width: 100%;
   height: 100%;
-  z-index: 0;
 }
 
-@media (max-width: 768px) {
-  body {
-    font-size: 16px;
-  }
+::selection {
+  background: hsl(var(--secondary));
+  color: hsl(var(--secondary-foreground));
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -116,4 +126,71 @@ iframe {
 :focus-visible {
   outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.focus\:not-sr-only:focus {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: inherit;
+  margin: inherit;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* shared editorial pieces */
+.eyebrow {
+  @apply inline-flex items-center gap-2 rounded-full border-2 border-border bg-card px-4 py-2 text-xs font-semibold uppercase tracking-[0.16em] text-foreground shadow-soft;
+}
+
+.headline {
+  @apply font-heading font-bold tracking-tight text-foreground;
+}
+
+.body-large {
+  @apply text-lg md:text-xl text-muted-foreground;
+}
+
+.editorial-card {
+  @apply rounded-[1.75rem] border-2 border-border bg-card shadow-hard;
+}
+
+.hairline {
+  height: 2px;
+  background: hsl(var(--border));
+}
+
+/* marquee */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+.marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 22s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .marquee { animation: none; }
+}
+
+/* outlined display text */
+.text-outline {
+  -webkit-text-stroke: 2px hsl(var(--foreground));
+  color: transparent;
 }

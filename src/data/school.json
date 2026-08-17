@@ -1,0 +1,161 @@
+{
+  "name": "Dolly Angels School",
+  "shortName": "Dolly Angels",
+  "tagline": "School for what’s ahead.",
+  "established": 2010,
+  "eyebrow": "Admissions open · 2026 – 27",
+  "heroLead": "A timeless, teacher-led education for every family.",
+  "contact": {
+    "phone": "+91 12345 67890",
+    "phoneHref": "tel:+911234567890",
+    "email": "info@dollyangels.com",
+    "addressLines": ["123 School Street", "Your City, State 123456"],
+    "mapUrl": "https://maps.google.com/?q=Dolly+Angels+School"
+  },
+  "hours": [
+    { "days": "Mon – Fri", "time": "8:00 AM – 3:00 PM" },
+    { "days": "Saturday", "time": "8:00 AM – 12:00 PM" },
+    { "days": "Sunday", "time": "Closed" }
+  ],
+  "stats": [
+    { "number": "500+", "label": "Happy students" },
+    { "number": "50+", "label": "Caring teachers" },
+    { "number": "12+", "label": "Years of care" },
+    { "number": "25+", "label": "Special programs" }
+  ],
+  "pillars": [
+    {
+      "icon": "heart",
+      "title": "Caring classrooms",
+      "description": "Small, close-knit rooms where every child is seen and supported."
+    },
+    {
+      "icon": "book",
+      "title": "Fundamentals first",
+      "description": "Reading, writing, and numbers — mastered with joy, not pressure."
+    },
+    {
+      "icon": "sparkle",
+      "title": "Play with purpose",
+      "description": "Art, stories, and outdoor play that turn curiosity into confidence."
+    },
+    {
+      "icon": "cap",
+      "title": "Ready for what’s next",
+      "description": "Skills and kindness that carry children confidently into Grade 1."
+    }
+  ],
+  "programs": [
+    {
+      "id": "playgroup",
+      "emoji": "🧸",
+      "title": "Playgroup",
+      "ages": "2 – 3 years",
+      "blurb": "First friends, songs, and sensory play in a warm classroom.",
+      "points": ["Play-based learning", "Gentle routines", "Short, happy school days"]
+    },
+    {
+      "id": "nursery",
+      "emoji": "🌱",
+      "title": "Nursery",
+      "ages": "3 – 4 years",
+      "blurb": "Language, numbers, and motor skills through stories and games.",
+      "points": ["Phonics & stories", "Outdoor play", "Toilet-training support"]
+    },
+    {
+      "id": "lkg",
+      "emoji": "📚",
+      "title": "LKG",
+      "ages": "4 – 5 years",
+      "blurb": "Pre-reading, writing readiness, and curious little scientists.",
+      "points": ["Early literacy", "Number sense", "Art & music"]
+    },
+    {
+      "id": "ukg",
+      "emoji": "🎒",
+      "title": "UKG",
+      "ages": "5 – 6 years",
+      "blurb": "A confident leap toward Grade 1 with projects and teamwork.",
+      "points": ["School readiness", "Projects", "Values & kindness"]
+    }
+  ],
+  "stories": [
+    {
+      "quote": "Our mornings are stress-free now. Aarav runs to school, and his teacher knows exactly how he learns.",
+      "name": "Priya S",
+      "meta": "Parent of Aarav"
+    },
+    {
+      "quote": "The mixed play and phonics blocks mean Meera learns from older friends and still feels safe to try.",
+      "name": "Rahul K",
+      "meta": "Parent of Meera"
+    },
+    {
+      "quote": "It feels like a true partnership. Clear updates, real warmth, and our daughter has blossomed.",
+      "name": "Ananya R",
+      "meta": "Parent of Ira"
+    }
+  ],
+  "buildingBlocks": [
+    {
+      "number": "01",
+      "title": "Take kids seriously",
+      "description": "When we take children seriously, they take themselves seriously too."
+    },
+    {
+      "number": "02",
+      "title": "Master the fundamentals",
+      "description": "From math, reasoning. From reading, expression. Strong foundations build confidence."
+    },
+    {
+      "number": "03",
+      "title": "Use tech with intention",
+      "description": "Not more tech or less tech — the right tools that serve learning."
+    },
+    {
+      "number": "04",
+      "title": "Pursue independence",
+      "description": "Little projects connect classroom learning to real life."
+    }
+  ],
+  "activities": [
+    {
+      "emoji": "🎨",
+      "title": "Art Zone",
+      "desc": "Paint your dreams in our colorful art studio.",
+      "href": "/programs#playgroup"
+    },
+    {
+      "emoji": "🏃",
+      "title": "Active Play",
+      "desc": "Jump, run, and climb in our safe playground.",
+      "href": "/programs"
+    },
+    {
+      "emoji": "📚",
+      "title": "Story Time",
+      "desc": "Discover magical worlds through books.",
+      "href": "/programs#lkg"
+    }
+  ],
+  "events": [
+    {
+      "emoji": "🎨",
+      "title": "Little Artists Exhibition",
+      "date": "2026-09-12",
+      "blurb": "Classrooms turn into a gallery of student work."
+    },
+    {
+      "emoji": "🏃",
+      "title": "Sports Day",
+      "date": "2026-10-18",
+      "blurb": "Races, games, and cheers on the playground."
+    },
+    {
+      "emoji": "🎪",
+      "title": "Annual Day",
+      "date": "2026-12-05",
+      "blurb": "Songs, dance, and a celebration for every family."
+    }
+  ]
+}

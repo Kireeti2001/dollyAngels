@@ -1,29 +1,24 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import { FaArrowRight } from "react-icons/fa";
+import school from "../../lib/school";
 import "./LandingPage.css";
 
 const EMOJIS = ["📚", "🎨", "🌈", "⭐", "✏️", "🎪", "🏫", "🎒"];
 
 const container = {
   hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.04, delayChildren: 0.2 },
-  },
+  show: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.15 } },
 };
 
 const itemMotion = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
 };
 
 function LandingPage() {
   const navigate = useNavigate();
-
-  const handleEnter = () => {
-    navigate("/home");
-  };
 
   return (
     <div className="landing-page">
@@ -33,7 +28,7 @@ function LandingPage() {
 
       {EMOJIS.map((emoji, i) => (
         <motion.span
-          key={i}
+          key={emoji}
           className="landing-emoji"
           initial={{ opacity: 0, scale: 0 }}
           animate={{
@@ -48,47 +43,51 @@ function LandingPage() {
             y: { duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 },
             rotate: { duration: 4 + i * 0.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.15 },
           }}
+          aria-hidden
         >
           {emoji}
         </motion.span>
       ))}
 
-      <motion.div
-        className="landing-hero"
-        style={{
-          textAlign: "center",
-          zIndex: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          maxWidth: "90vw",
-        }}
-        initial="hidden"
-        animate="show"
-        variants={container}
-      >
-        <motion.h1 variants={itemMotion} style={{ margin: 0 }}>
-          Welcome to Dolly Angels School
+      <motion.div className="landing-card" initial="hidden" animate="show" variants={container}>
+        <motion.span className="landing-eyebrow" variants={itemMotion}>
+          ✦ {school.eyebrow}
+        </motion.span>
+
+        <motion.div variants={itemMotion}>
+              <img
+                src="/logo.svg"
+                alt={`${school.name} logo`}
+                className="h-20 w-20 md:h-24 md:w-24 mx-auto mt-5"
+                width="96"
+                height="96"
+              />
+        </motion.div>
+
+        <motion.h1 variants={itemMotion}>
+          Welcome to
+          <br />
+          {school.name}
         </motion.h1>
-
-        <motion.p
-          className="subtitle"
-          variants={itemMotion}
-          transition={{ type: "spring", stiffness: 150 }}
-        >
-          Where Learning is an Adventure! 🌟
+        <motion.p className="subtitle" variants={itemMotion}>
+          {school.tagline} {school.heroLead}
         </motion.p>
-
-        <motion.div className="landing-cta-wrap" variants={itemMotion}>
+        <motion.div variants={itemMotion}>
           <motion.button
-            onClick={handleEnter}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            type="button"
+            className="cta"
+            onClick={() => navigate("/home")}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             aria-label="Enter Dolly Angels website"
           >
-            Enter Dolly Angels
+            Enter Dolly Angels <FaArrowRight aria-hidden />
           </motion.button>
+        </motion.div>
+        <motion.div variants={itemMotion}>
+          <button type="button" className="landing-skip" onClick={() => navigate("/home")}>
+            Skip intro
+          </button>
         </motion.div>
       </motion.div>
     </div>

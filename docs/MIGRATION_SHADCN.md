@@ -34,11 +34,13 @@ npm install
 npm run dev
 ```
 
-If `npm run build` fails with `@rollup/rollup-linux-x64-gnu` not found, try:
+If `npm run build` fails with `@rollup/rollup-linux-x64-gnu` not found, the lockfile is stale. Run:
 
 ```bash
 rm -rf node_modules package-lock.json && npm install && npm run build
 ```
+
+The repo pins Rollup to `@rollup/wasm-node` so Netlify does not depend on a native Linux binary.
 
 ## Theming
 

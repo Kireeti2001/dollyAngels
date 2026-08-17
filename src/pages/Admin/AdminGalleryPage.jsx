@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaPlus, FaTrash, FaImages, FaLock, FaSignOutAlt } from "react-icons/fa";
@@ -12,12 +12,10 @@ import {
   adminUploadPhoto,
 } from "../../hooks/useGalleryData";
 
-const ADMIN_PIN = import.meta.env.VITE_ADMIN_PIN;
-
 function AdminGalleryPage() {
   const navigate = useNavigate();
   const { showToast } = useToast();
-  const { albums, loading, error } = useGalleryData();
+  const { albums, loading, error, reload } = useGalleryData();
   const [pin, setPin] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
   const [creating, setCreating] = useState(false);
@@ -25,20 +23,25 @@ function AdminGalleryPage() {
   const [newDescription, setNewDescription] = useState("");
   const [uploadingFor, setUploadingFor] = useState(null);
   const [deleting, setDeleting] = useState(null);
-  const fileInputRef = useRef(null);
+  const [loggingIn, setLoggingIn] = useState(false);
 
-  const effectivePin = ADMIN_PIN || pin;
-
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
-    const p = (e.target.pin?.value || pin).trim();
+    const p = pin.trim();
     if (!p) {
       showToast({ title: "Enter PIN", status: "error" });
       return;
     }
-    setPin(p);
-    setAuthenticated(true);
-    showToast({ title: "Welcome", description: "You can manage the gallery.", status: "success" });
+    setLoggingIn(true);
+    try {
+      await adminGalleryApi({ pin: p, action: "verify" });
+      setAuthenticated(true);
+      showToast({ title: "Welcome", description: "You can manage the gallery.", status: "success" });
+    } catch (err) {
+      showToast({ title: "Could not sign in", description: err.message, status: "error" });
+    } finally {
+      setLoggingIn(false);
+    }
   };
 
   const handleLogout = () => {
@@ -49,11 +52,11 @@ function AdminGalleryPage() {
 
   const handleCreateAlbum = async (e) => {
     e.preventDefault();
-    if (!newTitle.trim() || !effectivePin) return;
+    if (!newTitle.trim() || !pin) return;
     setCreating(true);
     try {
       await adminGalleryApi({
-        pin: effectivePin,
+        pin,
         action: "create_album",
         title: newTitle.trim(),
         description: newDescription.trim(),
@@ -61,7 +64,7 @@ function AdminGalleryPage() {
       showToast({ title: "Album created", status: "success" });
       setNewTitle("");
       setNewDescription("");
-      window.location.reload();
+      await reload();
     } catch (err) {
       showToast({ title: "Error", description: err.message, status: "error" });
     } finally {
@@ -69,33 +72,47 @@ function AdminGalleryPage() {
     }
   };
 
-  const handleAddPhoto = async (albumId, file) => {
-    if (!file || !albumId || !effectivePin) return;
+  const handleAddPhoto = async (albumId, file, inputEl) => {
+    if (!file || !albumId || !pin) return;
     setUploadingFor(albumId);
     try {
-      await adminUploadPhoto(effectivePin, albumId, file);
+      await adminUploadPhoto(pin, albumId, file);
       showToast({ title: "Photo added", status: "success" });
-      window.location.reload();
+      await reload();
     } catch (err) {
       showToast({ title: "Upload failed", description: err.message, status: "error" });
     } finally {
       setUploadingFor(null);
-      if (fileInputRef.current) fileInputRef.current.value = "";
+      if (inputEl) inputEl.value = "";
     }
   };
 
   const handleDeleteImage = async (albumId, imageUrl) => {
-    if (!effectivePin) return;
+    if (!pin) return;
     setDeleting(imageUrl);
     try {
       await adminGalleryApi({
-        pin: effectivePin,
+        pin,
         action: "delete_image",
         albumId,
         imageUrl,
       });
       showToast({ title: "Photo removed", status: "success" });
-      window.location.reload();
+      await reload();
+    } catch (err) {
+      showToast({ title: "Error", description: err.message, status: "error" });
+    } finally {
+      setDeleting(null);
+    }
+  };
+
+  const handleDeleteAlbum = async (albumId, title) => {
+    if (!pin || !window.confirm(`Delete album “${title}”?`)) return;
+    setDeleting(albumId);
+    try {
+      await adminGalleryApi({ pin, action: "delete_album", albumId });
+      showToast({ title: "Album deleted", status: "success" });
+      await reload();
     } catch (err) {
       showToast({ title: "Error", description: err.message, status: "error" });
     } finally {
@@ -109,8 +126,10 @@ function AdminGalleryPage() {
         <div className="bg-card rounded-2xl p-8 max-w-md text-center border border-border">
           <h1 className="text-xl font-heading text-primary mb-2">Gallery admin</h1>
           <p className="text-muted-foreground mb-4">
-            To let admins add/remove photos from their phone, set up Supabase and Netlify env vars. See <code className="text-sm bg-muted px-1 rounded">docs/ADMIN_GALLERY_SETUP.md</code>.
+            To let admins add or remove photos from a phone, set up Supabase and Netlify env vars. See{" "}
+            <code className="text-sm bg-muted px-1 rounded">docs/ADMIN_GALLERY_SETUP.md</code>.
           </p>
+          <p className="text-sm text-muted-foreground mb-4">Until then the public gallery uses the photos already in the site.</p>
           <Button onClick={() => navigate("/gallery")}>Back to Gallery</Button>
         </div>
       </div>
@@ -146,8 +165,8 @@ function AdminGalleryPage() {
                 maxLength={8}
               />
             </div>
-            <Button type="submit" className="w-full" size="lg">
-              Enter
+            <Button type="submit" className="w-full" size="lg" disabled={loggingIn}>
+              {loggingIn ? "Checking…" : "Enter"}
             </Button>
           </form>
           <Button variant="ghost" className="w-full mt-4" onClick={() => navigate("/gallery")}>
@@ -180,7 +199,7 @@ function AdminGalleryPage() {
                 id="newTitle"
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
-                placeholder="e.g. School Day 2025"
+                placeholder="e.g. School Day 2026"
                 required
               />
             </div>
@@ -203,7 +222,7 @@ function AdminGalleryPage() {
           <h2 className="text-lg font-heading text-foreground mb-4">Albums & photos</h2>
           <div className="space-y-6">
             {albums.length === 0 && !loading && (
-              <p className="text-muted-foreground">No albums yet. Create one above or use the static gallery.</p>
+              <p className="text-muted-foreground">No albums yet. Create one above.</p>
             )}
             {albums.map((album) => (
               <motion.div
@@ -212,23 +231,32 @@ function AdminGalleryPage() {
                 animate={{ opacity: 1, y: 0 }}
                 className="bg-card rounded-2xl border border-border overflow-hidden"
               >
-                <div className="p-4 border-b border-border">
-                  <h3 className="font-heading font-semibold text-lg">{album.title}</h3>
-                  {album.description && (
-                    <p className="text-sm text-muted-foreground mt-1">{album.description}</p>
-                  )}
+                <div className="p-4 border-b border-border flex items-start justify-between gap-3">
+                  <div>
+                    <h3 className="font-heading font-semibold text-lg">{album.title}</h3>
+                    {album.description && (
+                      <p className="text-sm text-muted-foreground mt-1">{album.description}</p>
+                    )}
+                  </div>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleDeleteAlbum(album.id, album.title)}
+                    disabled={deleting === album.id}
+                  >
+                    Delete album
+                  </Button>
                 </div>
                 <div className="p-4 flex flex-wrap gap-3 items-center">
                   <input
-                    ref={fileInputRef}
                     type="file"
                     accept="image/*"
                     className="hidden"
+                    id={`file-${album.id}`}
                     onChange={(e) => {
                       const f = e.target.files?.[0];
-                      if (f) handleAddPhoto(album.id, f);
+                      if (f) handleAddPhoto(album.id, f, e.target);
                     }}
-                    id={`file-${album.id}`}
                   />
                   <Button
                     size="lg"
@@ -247,11 +275,7 @@ function AdminGalleryPage() {
                 <div className="p-4 pt-0 flex flex-wrap gap-3">
                   {(album.images || []).map((url) => (
                     <div key={url} className="relative group">
-                      <img
-                        src={url}
-                        alt=""
-                        className="w-20 h-20 object-cover rounded-lg border border-border"
-                      />
+                      <img src={url} alt="" className="w-20 h-20 object-cover rounded-lg border border-border" />
                       <Button
                         size="icon"
                         variant="destructive"

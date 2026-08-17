@@ -1,21 +1,26 @@
-import React from "react";
-import { useSpring, animated } from "react-spring";
+import { Link } from "react-router-dom";
+import { cn } from "../../lib/utils";
+import school from "../../lib/school";
 
-function Logo() {
-  const logoAnimation = useSpring({
-    from: { opacity: 0, transform: "scale(0.5)" },
-    to: { opacity: 1, transform: "scale(1)" },
-    config: { mass: 1, tension: 180, friction: 12 },
-  });
-
+function Logo({ to = "/home", className, imgClassName, showWordmark = true }) {
   return (
-    <animated.div style={logoAnimation}>
+    <Link to={to} className={cn("flex items-center gap-2.5 no-underline min-h-[44px] group", className)}>
       <img
-        src="/images/logo.png" // Replace with your logo path
-        alt="Dolly Angels Logo"
-        style={{ width: "150px", height: "auto" }}
+        src="/logo.svg"
+        alt=""
+        className={cn("h-9 w-9 md:h-10 md:w-10 transition-transform group-hover:-rotate-6 group-hover:scale-105", imgClassName)}
+        width="96"
+        height="96"
       />
-    </animated.div>
+      {showWordmark && (
+        <span className="font-heading text-lg md:text-xl font-bold leading-none text-foreground">
+          {school.shortName}
+          <span className="block text-[10px] font-body font-bold uppercase tracking-[0.2em] text-primary mt-0.5">
+            School
+          </span>
+        </span>
+      )}
+    </Link>
   );
 }
 

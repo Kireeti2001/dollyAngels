@@ -10,7 +10,7 @@ const SheetPortal = DialogPrimitive.Portal;
 const SheetOverlay = React.forwardRef(({ className, ...props }, ref) => (
   <DialogPrimitive.Overlay
     className={cn(
-      "fixed inset-0 z-50 bg-black/50 transition-opacity data-[state=open]:opacity-100 data-[state=closed]:opacity-0",
+      "fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-opacity data-[state=open]:opacity-100 data-[state=closed]:opacity-0",
       className
     )}
     {...props}
@@ -20,7 +20,7 @@ const SheetOverlay = React.forwardRef(({ className, ...props }, ref) => (
 SheetOverlay.displayName = DialogPrimitive.Overlay.displayName;
 
 const sheetVariants = {
-  right: "inset-y-0 right-0 h-full w-3/4 max-w-sm border-l border-border",
+  right: "inset-y-0 right-0 h-full w-3/4 max-w-sm border-l-2 border-border bg-card",
 };
 
 const SheetContent = React.forwardRef(
@@ -30,7 +30,7 @@ const SheetContent = React.forwardRef(
       <DialogPrimitive.Content
         ref={ref}
         className={cn(
-          "fixed z-50 gap-4 bg-background p-6 shadow-lg transition-transform duration-300 ease-out",
+          "fixed z-50 gap-4 bg-card p-6 shadow-hard transition-transform duration-300 ease-out",
           sheetVariants[side],
           className
         )}

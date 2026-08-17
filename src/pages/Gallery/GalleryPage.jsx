@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaArrowLeft, FaArrowRight, FaTimes } from "react-icons/fa";
+import { FaArrowLeft, FaArrowRight, FaTimes, FaArrowRight as FaOpen } from "react-icons/fa";
 import * as Dialog from "../../components/ui/dialog";
 import { Button } from "../../components/ui/button";
 import { Link } from "react-router-dom";
 import { useGalleryData } from "../../hooks/useGalleryData";
 import { hasSupabase } from "../../lib/supabase";
+import { Reveal, easing } from "../../components/ui/motion";
 
 function GalleryPage() {
   const { albums, loading } = useGalleryData();
@@ -13,17 +14,28 @@ function GalleryPage() {
   const [activeImageIndex, setActiveImageIndex] = useState(0);
   const [open, setOpen] = useState(false);
 
+  const currentAlbum = albums[selectedAlbumIndex];
+  const images = currentAlbum?.images || [];
+
   const handleNextImage = () => {
-    const currentAlbum = albums[selectedAlbumIndex];
-    if (!currentAlbum?.images?.length) return;
-    setActiveImageIndex((prev) => (prev + 1) % currentAlbum.images.length);
+    if (!images.length) return;
+    setActiveImageIndex((prev) => (prev + 1) % images.length);
   };
 
   const handlePrevImage = () => {
-    const currentAlbum = albums[selectedAlbumIndex];
-    if (!currentAlbum?.images?.length) return;
-    setActiveImageIndex((prev) => (prev - 1 + currentAlbum.images.length) % currentAlbum.images.length);
+    if (!images.length) return;
+    setActiveImageIndex((prev) => (prev - 1 + images.length) % images.length);
   };
+
+  useEffect(() => {
+    if (!open) return undefined;
+    const onKey = (e) => {
+      if (e.key === "ArrowRight") handleNextImage();
+      if (e.key === "ArrowLeft") handlePrevImage();
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [open, images.length]);
 
   if (loading) {
     return (
@@ -35,142 +47,137 @@ function GalleryPage() {
 
   if (albums.length === 0) {
     return (
-      <div className="min-h-[60vh] flex items-center justify-center">
-        <p className="text-muted-foreground">No albums yet. Add albums in admin or src/data/gallery.json</p>
+      <div className="min-h-[60vh] flex flex-col items-center justify-center gap-3 px-4 text-center">
+        <p className="text-muted-foreground">No albums yet. Check back soon for photos from school life.</p>
+        <Link to="/contact" className="text-primary underline">
+          Ask us about a visit
+        </Link>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-muted/30 dark:bg-background pt-4 md:pt-8 pb-8 md:pb-16">
-      <div className="max-w-7xl mx-auto px-4">
-        <motion.div
-          className="text-center mb-10"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 200, damping: 25 }}
-        >
-          <h1 className="text-2xl font-heading font-bold text-primary">Our Gallery</h1>
-          <p className="text-lg text-muted-foreground mt-2">
-            Capturing moments of learning, growth, and joy at Dolly Angels School
-          </p>
-        </motion.div>
+    <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
+      <Reveal className="text-center max-w-2xl mx-auto mb-12">
+        <span className="eyebrow">✦ Gallery</span>
+        <h1 className="headline text-4xl md:text-6xl mt-6">
+          100% real days.
+          <br />
+          <span className="text-primary">0% stock smiles.</span>
+        </h1>
+        <p className="body-large mt-6">Learning, growth, and joy at Dolly Angels School.</p>
+      </Reveal>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {albums.map((album, albumIndex) => (
-            <motion.div
-              key={album.id || album.title}
-              initial={{ opacity: 0, scale: 0.92 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ delay: albumIndex * 0.1, type: "spring", stiffness: 200, damping: 22 }}
-              whileHover={{ y: -8, scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              className="bg-card rounded-2xl overflow-hidden shadow-xl border-2 border-transparent hover:border-primary cursor-pointer relative"
-              onClick={() => {
-                setSelectedAlbumIndex(albumIndex);
-                setActiveImageIndex(0);
-                setOpen(true);
-              }}
-            >
-              <motion.div className="overflow-hidden" whileHover={{ scale: 1.05 }} transition={{ duration: 0.4 }}>
-                <img
-                  src={album.coverImage || album.images?.[0] || ""}
-                  alt={album.title}
-                  className="w-full h-[250px] object-cover"
-                />
-              </motion.div>
-              <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/80 to-transparent">
-                <p className="font-bold text-white">{album.title}</p>
-                <p className="text-sm text-white/90">{album.images?.length || 0} photos</p>
-              </div>
-            </motion.div>
-          ))}
-        </div>
-
-        <Dialog.Dialog open={open} onOpenChange={setOpen}>
-          <Dialog.DialogContent
-            className="fixed inset-0 z-50 w-full max-w-none translate-x-0 translate-y-0 border-0 bg-black/90 data-[state=open]:opacity-100 data-[state=closed]:opacity-0 flex items-center justify-center p-0"
-            onPointerDownOutside={(e) => e.preventDefault()}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {albums.map((album, albumIndex) => (
+          <motion.button
+            type="button"
+            key={album.id || album.title}
+            initial={{ opacity: 0, y: 28, rotate: albumIndex % 2 === 0 ? -1 : 1 }}
+            whileInView={{ opacity: 1, y: 0, rotate: 0 }}
+            viewport={{ once: true, margin: "-60px" }}
+            transition={{ duration: 0.6, ease: easing, delay: albumIndex * 0.06 }}
+            whileHover={{ y: -6 }}
+            className="editorial-card overflow-hidden text-left"
+            onClick={() => {
+              setSelectedAlbumIndex(albumIndex);
+              setActiveImageIndex(0);
+              setOpen(true);
+            }}
           >
-            <div className="relative w-full h-full max-h-[85vh] md:max-h-[80vh] flex items-center justify-center p-4">
-              <motion.div
-                className="absolute right-2 top-2 md:right-4 md:top-4 z-10"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  onClick={() => setOpen(false)}
-                  className="rounded-full bg-black/70 text-white hover:bg-black/90"
-                  aria-label="Close"
-                >
-                  <FaTimes className="h-5 w-5" />
-                </Button>
-              </motion.div>
+            <div className="overflow-hidden">
+              <motion.img
+                src={album.coverImage || album.images?.[0] || "/logo.svg"}
+                alt=""
+                className="w-full h-[230px] object-cover"
+                whileHover={{ scale: 1.06 }}
+                transition={{ duration: 0.5, ease: easing }}
+              />
+            </div>
+            <div className="p-5 flex items-center justify-between gap-3">
+              <div>
+                <p className="font-heading font-bold text-lg">{album.title}</p>
+                <p className="text-sm text-muted-foreground">
+                  {album.images?.length || 0} photos
+                  {album.description ? ` · ${album.description}` : ""}
+                </p>
+              </div>
+              <span className="rounded-full border-2 border-border bg-secondary p-2.5 shrink-0">
+                <FaOpen className="h-3.5 w-3.5" aria-hidden />
+              </span>
+            </div>
+          </motion.button>
+        ))}
+      </div>
 
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={activeImageIndex}
-                  initial={{ opacity: 0, x: 20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -20 }}
-                  transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                  className="flex items-center justify-center"
-                >
-                  <img
-                    src={albums[selectedAlbumIndex]?.images?.[activeImageIndex]}
-                    alt={`Gallery ${activeImageIndex + 1}`}
-                    className="max-w-full max-h-[85vh] md:max-h-[80vh] object-contain"
-                  />
-                </motion.div>
-              </AnimatePresence>
+      <Dialog.Dialog open={open} onOpenChange={setOpen}>
+        <Dialog.DialogContent className="max-w-[min(96vw,960px)] bg-card border-2 border-border p-3 sm:p-4 shadow-hard">
+          <Dialog.DialogTitle className="sr-only">
+            {currentAlbum?.title || "Gallery"} photo {activeImageIndex + 1} of {images.length}
+          </Dialog.DialogTitle>
+          <Dialog.DialogDescription className="sr-only">
+            Use the arrow buttons or keyboard arrows to browse photos.
+          </Dialog.DialogDescription>
+          <div className="relative min-h-[50vh] flex items-center justify-center bg-muted rounded-2xl overflow-hidden">
+            <Button
+              variant="outline"
+              size="icon"
+              onClick={() => setOpen(false)}
+              className="absolute right-2 top-2 z-10 shadow-none"
+              aria-label="Close"
+            >
+              <FaTimes className="h-4 w-4" />
+            </Button>
 
-              <motion.div
-                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 z-10"
-                whileHover={{ scale: 1.15 }}
-                whileTap={{ scale: 0.9 }}
-              >
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={activeImageIndex}
+                initial={{ opacity: 0, x: 24 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -24 }}
+                transition={{ duration: 0.35, ease: easing }}
+                src={images[activeImageIndex]}
+                alt={`${currentAlbum?.title || "Gallery"} ${activeImageIndex + 1}`}
+                className="max-w-full max-h-[70vh] object-contain"
+              />
+            </AnimatePresence>
+
+            {images.length > 1 && (
+              <>
                 <Button
-                  variant="ghost"
+                  variant="secondary"
                   size="icon"
                   onClick={handlePrevImage}
-                  className="rounded-full bg-black/70 text-white hover:bg-black/90"
-                  aria-label="Previous"
+                  className="absolute left-2 top-1/2 -translate-y-1/2"
+                  aria-label="Previous photo"
                 >
-                  <FaArrowLeft className="h-5 w-5" />
+                  <FaArrowLeft className="h-4 w-4" />
                 </Button>
-              </motion.div>
-              <motion.div
-                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 z-10"
-                whileHover={{ scale: 1.15 }}
-                whileTap={{ scale: 0.9 }}
-              >
                 <Button
-                  variant="ghost"
+                  variant="secondary"
                   size="icon"
                   onClick={handleNextImage}
-                  className="rounded-full bg-black/70 text-white hover:bg-black/90"
-                  aria-label="Next"
+                  className="absolute right-2 top-1/2 -translate-y-1/2"
+                  aria-label="Next photo"
                 >
-                  <FaArrowRight className="h-5 w-5" />
+                  <FaArrowRight className="h-4 w-4" />
                 </Button>
-              </motion.div>
-            </div>
-          </Dialog.DialogContent>
-        </Dialog.Dialog>
-
-        {hasSupabase && (
-          <p className="text-center mt-8">
-            <Link
-              to="/admin/gallery"
-              className="text-sm text-muted-foreground hover:text-primary underline"
-            >
-              Manage gallery (admin)
-            </Link>
+              </>
+            )}
+          </div>
+          <p className="text-center text-sm font-bold text-muted-foreground mt-3">
+            {currentAlbum?.title} · {activeImageIndex + 1} / {images.length}
           </p>
-        )}
-      </div>
+        </Dialog.DialogContent>
+      </Dialog.Dialog>
+
+      {hasSupabase && (
+        <p className="text-center mt-10">
+          <Link to="/admin/gallery" className="text-sm text-muted-foreground hover:text-primary underline">
+            Manage gallery (admin)
+          </Link>
+        </p>
+      )}
     </div>
   );
 }
