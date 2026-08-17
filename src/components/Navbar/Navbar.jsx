@@ -32,52 +32,43 @@ function Navbar() {
         onClick={onClick}
         aria-current={isActive ? "page" : undefined}
         className={cn(
-          "flex items-center gap-2 rounded-xl px-3 py-3 text-sm font-semibold min-h-[44px] relative transition-colors",
+          "flex items-center gap-2 rounded-full px-4 py-2.5 text-sm font-bold min-h-[44px] transition-all border-2",
           isActive
-            ? "bg-primary text-primary-foreground"
-            : "text-foreground hover:bg-secondary hover:text-secondary-foreground dark:hover:bg-accent dark:hover:text-accent-foreground"
+            ? "bg-foreground text-background border-border shadow-hard-sm"
+            : "text-foreground border-transparent hover:border-border hover:bg-card"
         )}
       >
-        <motion.span whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.95 }} className="flex items-center">
-          <IconComponent className="h-5 w-5" aria-hidden />
-        </motion.span>
+        <IconComponent className="h-4 w-4" aria-hidden />
         <span>{item.text}</span>
-        {isActive && (
-          <motion.span
-            layoutId="nav-pill"
-            className="absolute bottom-1 left-2 right-2 h-0.5 rounded-full bg-white/90"
-            transition={{ type: "spring", stiffness: 380, damping: 30 }}
-          />
-        )}
       </Link>
     );
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-[1000] bg-background/95 backdrop-blur-sm border-b border-border shadow-soft">
-      <div className="max-w-7xl mx-auto px-4 md:px-6 py-2 flex items-center justify-between min-h-[56px] md:min-h-[64px]">
+    <header className="fixed top-0 left-0 right-0 z-[1000] bg-background/90 backdrop-blur-md border-b-2 border-border">
+      <div className="max-w-7xl mx-auto px-4 md:px-6 py-3 flex items-center justify-between min-h-[64px] md:min-h-[72px]">
         <Logo />
 
         {isMobile ? (
           <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
-              {theme === "light" ? <FaMoon className="h-5 w-5" /> : <FaSun className="h-5 w-5" />}
+            <Button variant="outline" size="icon" onClick={toggleTheme} aria-label="Toggle theme" className="shadow-none">
+              {theme === "light" ? <FaMoon className="h-4 w-4" /> : <FaSun className="h-4 w-4" />}
             </Button>
             <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
               <SheetTrigger asChild>
-                <Button variant="ghost" size="icon" aria-label="Open menu">
-                  <FaBars className="h-6 w-6" />
+                <Button variant="outline" size="icon" aria-label="Open menu" className="shadow-none">
+                  <FaBars className="h-5 w-5" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[280px]">
-                <SheetTitle className="font-heading text-primary">Menu</SheetTitle>
-                <nav className="flex flex-col gap-1 pt-6">
+              <SheetContent side="right" className="w-[300px] border-l-2">
+                <SheetTitle className="font-heading text-foreground">Menu</SheetTitle>
+                <nav className="flex flex-col gap-2 pt-6">
                   {menuItems.map((item, i) => (
                     <motion.div
                       key={item.path}
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: i * 0.05, type: "spring", stiffness: 200 }}
+                      transition={{ delay: i * 0.05, duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
                     >
                       <NavLink item={item} onClick={() => setSheetOpen(false)} />
                     </motion.div>
@@ -87,7 +78,7 @@ function Navbar() {
             </Sheet>
           </div>
         ) : (
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5">
             {menuItems.map((item) => (
               <NavLink key={item.path} item={item} />
             ))}
@@ -96,9 +87,9 @@ function Navbar() {
               size="icon"
               onClick={toggleTheme}
               aria-label="Toggle theme"
-              className="ml-2 rounded-full bg-primary text-primary-foreground hover:bg-primary/90"
+              className="ml-2"
             >
-              {theme === "light" ? <FaMoon className="h-5 w-5" /> : <FaSun className="h-5 w-5" />}
+              {theme === "light" ? <FaMoon className="h-4 w-4" /> : <FaSun className="h-4 w-4" />}
             </Button>
           </div>
         )}

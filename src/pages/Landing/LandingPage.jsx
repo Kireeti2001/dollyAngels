@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import Logo from "../../components/Logo/Logo";
+import { FaArrowRight } from "react-icons/fa";
 import school from "../../lib/school";
 import "./LandingPage.css";
 
@@ -9,12 +9,12 @@ const EMOJIS = ["📚", "🎨", "🌈", "⭐", "✏️", "🎪", "🏫", "🎒"]
 
 const container = {
   hidden: { opacity: 0 },
-  show: { opacity: 1, transition: { staggerChildren: 0.04, delayChildren: 0.2 } },
+  show: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.15 } },
 };
 
 const itemMotion = {
   hidden: { opacity: 0, y: 24 },
-  show: { opacity: 1, y: 0 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.22, 1, 0.36, 1] } },
 };
 
 function LandingPage() {
@@ -49,33 +49,40 @@ function LandingPage() {
         </motion.span>
       ))}
 
-      <motion.div className="landing-hero" initial="hidden" animate="show" variants={container}>
+      <motion.div className="landing-card" initial="hidden" animate="show" variants={container}>
+        <motion.span className="landing-eyebrow" variants={itemMotion}>
+          ✦ {school.eyebrow}
+        </motion.span>
+
         <motion.div variants={itemMotion}>
-          <Logo to="/home" showWordmark={false} imgClassName="h-24 md:h-28 drop-shadow-lg" className="justify-center mb-4" />
+          <img src="/logo.svg" alt="" className="h-20 md:h-24 w-auto mx-auto mt-5" width="140" height="102" />
         </motion.div>
-        <motion.h1 variants={itemMotion}>Welcome to {school.name}</motion.h1>
+
+        <motion.h1 variants={itemMotion}>
+          Welcome to
+          <br />
+          {school.name}
+        </motion.h1>
         <motion.p className="subtitle" variants={itemMotion}>
-          {school.tagline} 🌟
+          {school.tagline} {school.heroLead}
         </motion.p>
-        <motion.div className="landing-cta-wrap" variants={itemMotion}>
+        <motion.div variants={itemMotion}>
           <motion.button
             type="button"
+            className="cta"
             onClick={() => navigate("/home")}
-            whileHover={{ scale: 1.08 }}
-            whileTap={{ scale: 0.96 }}
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
             aria-label="Enter Dolly Angels website"
           >
-            Enter Dolly Angels
+            Enter Dolly Angels <FaArrowRight aria-hidden />
           </motion.button>
         </motion.div>
-        <motion.button
-          type="button"
-          variants={itemMotion}
-          className="landing-skip"
-          onClick={() => navigate("/home")}
-        >
-          Skip intro
-        </motion.button>
+        <motion.div variants={itemMotion}>
+          <button type="button" className="landing-skip" onClick={() => navigate("/home")}>
+            Skip intro
+          </button>
+        </motion.div>
       </motion.div>
     </div>
   );

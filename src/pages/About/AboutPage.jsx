@@ -1,85 +1,83 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import { FaGraduationCap, FaHeart, FaStar, FaBook } from "react-icons/fa";
+import { FaArrowRight } from "react-icons/fa";
 import { Button } from "../../components/ui/button";
+import { Reveal, MotionCard } from "../../components/ui/motion";
 import school from "../../lib/school";
-
-const icons = { heart: FaHeart, star: FaStar, book: FaBook, cap: FaGraduationCap };
-
-const container = { hidden: { opacity: 0 }, show: { opacity: 1, transition: { staggerChildren: 0.08, delayChildren: 0.1 } } };
-const item = { hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } };
 
 function AboutPage() {
   return (
-    <div className="min-h-[90vh] py-8 md:py-10 px-4">
-      <div className="max-w-7xl mx-auto">
-        <motion.div className="mb-16 text-center" variants={container} initial="hidden" animate="show">
-          <motion.h1 variants={item} className="text-3xl font-heading font-bold text-primary mb-4">
-            About {school.name}
-          </motion.h1>
-          <motion.p variants={item} className="text-lg text-muted-foreground max-w-[800px] mx-auto">
-            Where every child&apos;s potential takes flight. Since {school.established}, we&apos;ve been nurturing young
-            minds into confident, creative, and compassionate individuals.
-          </motion.p>
-        </motion.div>
+    <div className="max-w-7xl mx-auto px-4 md:px-6 py-12 md:py-16">
+      <Reveal className="text-center max-w-3xl mx-auto mb-16">
+        <span className="eyebrow">✦ Our story</span>
+        <h1 className="headline text-4xl md:text-6xl mt-6">
+          Begin with what lasts.
+          <br />
+          Build for <span className="text-primary">what’s ahead.</span>
+        </h1>
+        <p className="body-large mt-6">
+          Since {school.established}, Dolly Angels has asked one simple question: “What has always worked?” The answer
+          lives in every classroom.
+        </p>
+      </Reveal>
 
-        <motion.div className="mb-20" variants={container} initial="hidden" whileInView="show" viewport={{ once: true, margin: "-80px" }}>
-          <h2 className="text-xl font-heading font-bold text-teal-600 dark:text-teal-400 mb-10 text-center">Our values</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {school.values.map((value) => {
-              const Icon = icons[value.icon] || FaStar;
-              return (
-                <motion.div
-                  key={value.title}
-                  variants={item}
-                  className="bg-card rounded-2xl p-6 shadow-lg border border-border"
-                  whileHover={{ y: -6 }}
-                >
-                  <div className="flex flex-col items-center gap-4 text-center">
-                    <Icon className="w-10 h-10 text-primary" aria-hidden />
-                    <h3 className="font-heading font-semibold text-teal-600 dark:text-teal-400">{value.title}</h3>
-                    <p className="text-sm text-muted-foreground">{value.description}</p>
-                  </div>
-                </motion.div>
-              );
-            })}
-          </div>
-        </motion.div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 items-center mb-20">
-          <div className="space-y-4">
-            <h2 className="text-xl font-heading font-bold text-teal-600 dark:text-teal-400">Our story</h2>
-            <p className="text-muted-foreground">
-              Dolly Angels began with a simple dream: a place where children could learn, play, and grow in an
-              environment that celebrates their uniqueness.
-            </p>
-            <p className="text-muted-foreground">
-              We grew from a small classroom of 15 students into a vibrant community of learners, teachers, and
-              families working together.
-            </p>
-            <p className="text-muted-foreground">
-              Today we keep that warm, nurturing hallmark while using playful, modern teaching every day.
-            </p>
-            <Button asChild>
-              <Link to="/programs">Explore programs</Link>
-            </Button>
-          </div>
-          <img
-            src="/logo.svg"
-            alt={`${school.name} logo`}
-            className="rounded-2xl shadow-2xl w-full max-w-sm mx-auto bg-card p-8 border border-border"
-          />
+      <div className="grid md:grid-cols-2 gap-10 items-center mb-20">
+        <MotionCard className="rotate-[-1deg]">
+          <img src="/logo.svg" alt={`${school.name} logo`} className="h-32 w-auto mx-auto" width="140" height="102" />
+          <p className="text-center text-muted-foreground mt-4">A warm, close-knit school for curious little learners.</p>
+        </MotionCard>
+        <div className="space-y-4">
+          <p className="text-lg text-muted-foreground">
+            Dolly Angels began with a simple dream: a place where children could learn, play, and grow in an
+            environment that celebrates their uniqueness.
+          </p>
+          <p className="text-lg text-muted-foreground">
+            We grew from a small classroom of 15 students into a vibrant community of learners, teachers, and
+            families working together.
+          </p>
+          <p className="text-lg text-muted-foreground">
+            Today we keep that warm, nurturing hallmark while using playful, modern teaching every day.
+          </p>
+          <Button asChild>
+            <Link to="/programs">
+              Explore programs <FaArrowRight className="h-4 w-4" />
+            </Link>
+          </Button>
         </div>
+      </div>
 
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-10">
-          {school.stats.map((stat) => (
-            <div key={stat.label} className="p-6 bg-card rounded-2xl shadow-md border border-border text-center">
-              <p className="text-xl font-heading font-bold text-primary">{stat.number}</p>
-              <p className="text-sm font-bold text-muted-foreground">{stat.label}</p>
+      <Reveal className="text-center mb-10">
+        <span className="eyebrow">✦ The building blocks</span>
+        <h2 className="headline text-3xl md:text-5xl mt-5">A timeless education, every day.</h2>
+      </Reveal>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-20">
+        {school.buildingBlocks.map((block, i) => (
+          <MotionCard key={block.number} delay={i * 0.06} className="flex gap-5 items-start">
+            <span className="font-heading font-bold text-3xl text-outline shrink-0">{block.number}</span>
+            <div>
+              <h3 className="font-heading font-bold text-xl">{block.title}</h3>
+              <p className="text-muted-foreground mt-2">{block.description}</p>
             </div>
-          ))}
-        </div>
+          </MotionCard>
+        ))}
+      </div>
+
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {school.stats.map((stat, i) => (
+          <MotionCard key={stat.label} delay={i * 0.05} className="text-center bg-secondary">
+            <motion.p
+              className="font-heading font-bold text-4xl"
+              initial={{ scale: 0.8 }}
+              whileInView={{ scale: 1 }}
+              viewport={{ once: true }}
+              transition={{ type: "spring", stiffness: 300, damping: 18, delay: i * 0.05 }}
+            >
+              {stat.number}
+            </motion.p>
+            <p className="text-sm font-bold mt-1">{stat.label}</p>
+          </MotionCard>
+        ))}
       </div>
     </div>
   );

@@ -4,11 +4,12 @@ import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import ParticlesBackground from "../../components/ParticlesBackground";
+import { easing } from "../../components/ui/motion";
 
 const pageVariants = {
-  initial: { opacity: 0, y: 12 },
+  initial: { opacity: 0, y: 16 },
   animate: { opacity: 1, y: 0 },
-  exit: { opacity: 0, y: -8 },
+  exit: { opacity: 0, y: -10 },
 };
 
 function Layout() {
@@ -16,7 +17,7 @@ function Layout() {
   const prefersReducedMotion = useReducedMotion();
   const pageTransition = prefersReducedMotion
     ? { duration: 0 }
-    : { type: "spring", stiffness: 260, damping: 25 };
+    : { duration: 0.5, ease: easing };
 
   useEffect(() => {
     if (location.hash) {
@@ -34,17 +35,17 @@ function Layout() {
     <div className="relative min-h-screen overflow-x-hidden">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:absolute focus:z-[1100] focus:left-4 focus:top-4 focus:rounded-xl focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
+        className="sr-only focus:not-sr-only focus:absolute focus:z-[1100] focus:left-4 focus:top-4 focus:rounded-full focus:bg-primary focus:px-4 focus:py-2 focus:text-primary-foreground"
       >
         Skip to content
       </a>
-      <div className="fixed inset-0 z-0 pointer-events-none">
+      <div className="fixed inset-0 z-0 pointer-events-none opacity-70">
         <ParticlesBackground />
       </div>
 
       <div className="relative z-10 min-h-screen flex flex-col">
         <Navbar />
-        <main id="main-content" className="flex-1 pt-[56px] md:pt-[64px] overflow-x-hidden">
+        <main id="main-content" className="flex-1 pt-[64px] md:pt-[72px] overflow-x-hidden">
           <AnimatePresence mode="wait">
             <motion.div
               key={location.pathname}
