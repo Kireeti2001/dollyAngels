@@ -24,7 +24,7 @@ function AboutPage() {
 
       <div className="grid md:grid-cols-2 gap-10 items-center mb-20">
         <MotionCard className="rotate-[-1deg]">
-          <img src="/logo.svg" alt={`${school.name} logo`} className="h-32 w-auto mx-auto" width="140" height="102" />
+          <img src="/logo.svg" alt={`${school.name} logo`} className="h-28 w-28 mx-auto" width="96" height="96" />
           <p className="text-center text-muted-foreground mt-4">A warm, close-knit school for curious little learners.</p>
         </MotionCard>
         <div className="space-y-4">

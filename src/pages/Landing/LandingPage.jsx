@@ -55,7 +55,13 @@ function LandingPage() {
         </motion.span>
 
         <motion.div variants={itemMotion}>
-          <img src="/logo.svg" alt="" className="h-20 md:h-24 w-auto mx-auto mt-5" width="140" height="102" />
+              <img
+                src="/logo.svg"
+                alt={`${school.name} logo`}
+                className="h-20 w-20 md:h-24 md:w-24 mx-auto mt-5"
+                width="96"
+                height="96"
+              />
         </motion.div>
 
         <motion.h1 variants={itemMotion}>

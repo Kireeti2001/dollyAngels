@@ -48,7 +48,7 @@ function HomePage() {
           >
             <div className="editorial-card p-8 md:p-10 text-center rotate-1">
               <Floaty>
-                <img src="/logo.svg" alt={`${school.name} logo`} className="h-36 md:h-44 w-auto mx-auto" width="140" height="102" />
+                <img src="/logo.svg" alt={`${school.name} logo`} className="h-28 w-28 md:h-36 md:w-36 mx-auto" width="96" height="96" />
               </Floaty>
               <p className="font-heading font-bold text-2xl mt-4">{school.shortName}</p>
               <p className="text-muted-foreground mt-2">{school.tagline}</p>
