@@ -16,9 +16,9 @@ All changes appear immediately on the public Gallery page.
 
 ## 1. Contact form (so it actually submits)
 
-The contact form sends to **Formspree** or your own API. Until you set this up, submissions will fail.
+The contact form sends to **Formspree** when `VITE_CONTACT_API` is set. If it is not set, the form still works: it opens the visitor’s email app with the enquiry filled in.
 
-### Formspree (easiest)
+### Formspree (optional, automatic inbox)
 
 1. Go to [formspree.io](https://formspree.io) and create a free account.
 2. Create a new form; copy the form ID (e.g. `xyzabcde`).
@@ -100,4 +100,4 @@ They open the link on their phone, enter the PIN, then can add/remove photos. Ch
 |------|------------|
 | Contact form submits and you get emails | Set `VITE_CONTACT_API` to your Formspree URL in `.env` (see section 1). |
 | Admins add/remove gallery images from phone | Set up Supabase + Netlify env vars + `.env` (see section 2), then use `/admin/gallery` and the PIN. |
-| No backend / no Supabase | Leave Supabase and PIN unset; gallery keeps using `src/data/gallery.json` and contact form will fail until Formspree is set. |
+| No backend / no Supabase | Leave Supabase and PIN unset; gallery keeps using `src/data/gallery.json`. Contact still works via the visitor’s email app until Formspree is set. |

@@ -1,16 +1,15 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import Logo from "../../components/Logo/Logo";
+import school from "../../lib/school";
 import "./LandingPage.css";
 
 const EMOJIS = ["📚", "🎨", "🌈", "⭐", "✏️", "🎪", "🏫", "🎒"];
 
 const container = {
   hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.04, delayChildren: 0.2 },
-  },
+  show: { opacity: 1, transition: { staggerChildren: 0.04, delayChildren: 0.2 } },
 };
 
 const itemMotion = {
@@ -21,10 +20,6 @@ const itemMotion = {
 function LandingPage() {
   const navigate = useNavigate();
 
-  const handleEnter = () => {
-    navigate("/home");
-  };
-
   return (
     <div className="landing-page">
       <div className="landing-blob landing-blob-1" aria-hidden />
@@ -33,7 +28,7 @@ function LandingPage() {
 
       {EMOJIS.map((emoji, i) => (
         <motion.span
-          key={i}
+          key={emoji}
           className="landing-emoji"
           initial={{ opacity: 0, scale: 0 }}
           animate={{
@@ -48,48 +43,39 @@ function LandingPage() {
             y: { duration: 3 + i * 0.3, repeat: Infinity, ease: "easeInOut", delay: i * 0.2 },
             rotate: { duration: 4 + i * 0.2, repeat: Infinity, ease: "easeInOut", delay: i * 0.15 },
           }}
+          aria-hidden
         >
           {emoji}
         </motion.span>
       ))}
 
-      <motion.div
-        className="landing-hero"
-        style={{
-          textAlign: "center",
-          zIndex: 1,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          maxWidth: "90vw",
-        }}
-        initial="hidden"
-        animate="show"
-        variants={container}
-      >
-        <motion.h1 variants={itemMotion} style={{ margin: 0 }}>
-          Welcome to Dolly Angels School
-        </motion.h1>
-
-        <motion.p
-          className="subtitle"
-          variants={itemMotion}
-          transition={{ type: "spring", stiffness: 150 }}
-        >
-          Where Learning is an Adventure! 🌟
+      <motion.div className="landing-hero" initial="hidden" animate="show" variants={container}>
+        <motion.div variants={itemMotion}>
+          <Logo to="/home" showWordmark={false} imgClassName="h-24 md:h-28 drop-shadow-lg" className="justify-center mb-4" />
+        </motion.div>
+        <motion.h1 variants={itemMotion}>Welcome to {school.name}</motion.h1>
+        <motion.p className="subtitle" variants={itemMotion}>
+          {school.tagline} 🌟
         </motion.p>
-
         <motion.div className="landing-cta-wrap" variants={itemMotion}>
           <motion.button
-            onClick={handleEnter}
+            type="button"
+            onClick={() => navigate("/home")}
             whileHover={{ scale: 1.08 }}
             whileTap={{ scale: 0.96 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
             aria-label="Enter Dolly Angels website"
           >
             Enter Dolly Angels
           </motion.button>
         </motion.div>
+        <motion.button
+          type="button"
+          variants={itemMotion}
+          className="landing-skip"
+          onClick={() => navigate("/home")}
+        >
+          Skip intro
+        </motion.button>
       </motion.div>
     </div>
   );

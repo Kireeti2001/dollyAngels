@@ -1,0 +1,120 @@
+{
+  "name": "Dolly Angels School",
+  "shortName": "Dolly Angels",
+  "tagline": "Where Learning is an Adventure!",
+  "established": 2010,
+  "contact": {
+    "phone": "+91 12345 67890",
+    "phoneHref": "tel:+911234567890",
+    "email": "info@dollyangels.com",
+    "addressLines": ["123 School Street", "Your City, State 123456"],
+    "mapUrl": "https://maps.google.com/?q=Dolly+Angels+School"
+  },
+  "hours": [
+    { "days": "Mon – Fri", "time": "8:00 AM – 3:00 PM" },
+    { "days": "Saturday", "time": "8:00 AM – 12:00 PM" },
+    { "days": "Sunday", "time": "Closed" }
+  ],
+  "stats": [
+    { "number": "500+", "label": "Happy Students" },
+    { "number": "50+", "label": "Expert Teachers" },
+    { "number": "12+", "label": "Years of Care" },
+    { "number": "25+", "label": "Special Programs" }
+  ],
+  "values": [
+    {
+      "icon": "heart",
+      "title": "Nurturing Environment",
+      "description": "A loving, safe space where every child feels free to explore and learn."
+    },
+    {
+      "icon": "star",
+      "title": "Excellence in Education",
+      "description": "A creative curriculum that brings out the best in each child."
+    },
+    {
+      "icon": "book",
+      "title": "Holistic Development",
+      "description": "Academic, social, emotional, and physical growth — together."
+    },
+    {
+      "icon": "cap",
+      "title": "Future Ready",
+      "description": "Skills and values children need for a bright, confident future."
+    }
+  ],
+  "programs": [
+    {
+      "id": "playgroup",
+      "emoji": "🧸",
+      "title": "Playgroup",
+      "ages": "2 – 3 years",
+      "blurb": "First friends, songs, and sensory play in a warm classroom.",
+      "points": ["Play-based learning", "Toilet-training support", "Short, happy school days"]
+    },
+    {
+      "id": "nursery",
+      "emoji": "🌱",
+      "title": "Nursery",
+      "ages": "3 – 4 years",
+      "blurb": "Language, numbers, and motor skills through stories and games.",
+      "points": ["Phonics & stories", "Outdoor play", "Gentle routines"]
+    },
+    {
+      "id": "lkg",
+      "emoji": "📚",
+      "title": "LKG",
+      "ages": "4 – 5 years",
+      "blurb": "Pre-reading, writing readiness, and curious little scientists.",
+      "points": ["Early literacy", "Number sense", "Art & music"]
+    },
+    {
+      "id": "ukg",
+      "emoji": "🎒",
+      "title": "UKG",
+      "ages": "5 – 6 years",
+      "blurb": "A confident leap toward Grade 1 with projects and teamwork.",
+      "points": ["School readiness", "Projects", "Values & kindness"]
+    }
+  ],
+  "activities": [
+    {
+      "emoji": "🎨",
+      "title": "Art Zone",
+      "desc": "Paint your dreams in our colorful art studio!",
+      "href": "/programs#playgroup"
+    },
+    {
+      "emoji": "🏃",
+      "title": "Active Play",
+      "desc": "Jump, run, and play in our safe playground!",
+      "href": "/programs"
+    },
+    {
+      "emoji": "📚",
+      "title": "Story Time",
+      "desc": "Discover magical worlds through books!",
+      "href": "/programs#lkg"
+    }
+  ],
+  "events": [
+    {
+      "emoji": "🎨",
+      "title": "Little Artists Exhibition",
+      "date": "2026-09-12",
+      "blurb": "Classrooms turn into a gallery of student work."
+    },
+    {
+      "emoji": "🏃",
+      "title": "Sports Day",
+      "date": "2026-10-18",
+      "blurb": "Races, games, and cheers on the playground."
+    },
+    {
+      "emoji": "🎪",
+      "title": "Annual Day",
+      "date": "2026-12-05",
+      "blurb": "Songs, dance, and a celebration for every family."
+    }
+  ]
+}

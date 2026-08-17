@@ -1,86 +1,91 @@
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { FaPhone, FaEnvelope, FaMapMarkerAlt } from "react-icons/fa";
+import { FaPhone, FaEnvelope, FaMapMarkerAlt, FaClock } from "react-icons/fa";
 import { useToast } from "../../contexts/ToastContext";
 import { Button } from "../../components/ui/button";
 import { Input } from "../../components/ui/input";
 import { Textarea } from "../../components/ui/textarea";
 import { Label } from "../../components/ui/label";
+import school from "../../lib/school";
+import {
+  validateEnquiry,
+  isContactApiConfigured,
+  buildMailtoHref,
+} from "../../lib/contact.mjs";
+
+const emptyForm = {
+  parentName: "",
+  email: "",
+  phone: "",
+  childName: "",
+  childAge: "",
+  message: "",
+};
 
 function ContactPage() {
   const { showToast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [formData, setFormData] = useState({
-    parentName: "",
-    email: "",
-    phone: "",
-    childName: "",
-    childAge: "",
-    message: "",
-  });
+  const [formError, setFormError] = useState("");
+  const [formData, setFormData] = useState(emptyForm);
+  const apiUrl = import.meta.env.VITE_CONTACT_API;
+  const apiReady = isContactApiConfigured(apiUrl);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const validateForm = () => {
-    const errors = [];
-    if (!formData.parentName) errors.push("Parent name is required");
-    if (!formData.email) errors.push("Email is required");
-    if (!formData.phone) errors.push("Phone number is required");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) errors.push("Invalid email format");
-    if (!/^\d{10}$/.test(formData.phone)) errors.push("Invalid phone number (10 digits required)");
-    return errors;
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const errors = validateForm();
+    const errors = validateEnquiry(formData);
     if (errors.length > 0) {
-      errors.forEach((error) => showToast({ title: "Validation Error", description: error, status: "error" }));
+      setFormError(errors[0]);
+      showToast({ title: "Please check the form", description: errors[0], status: "error" });
+      return;
+    }
+    setFormError("");
+    if (!apiReady) {
+      window.location.href = buildMailtoHref(formData, school.contact.email);
+      showToast({
+        title: "Opening your email app",
+        description: "Send the message from there and we will reply soon.",
+        status: "success",
+      });
       return;
     }
     setIsSubmitting(true);
     try {
-      const apiUrl = import.meta.env.VITE_CONTACT_API || "https://formspree.io/f/YOUR_FORM_ID";
       const response = await fetch(apiUrl, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
         body: JSON.stringify(formData),
       });
       if (!response.ok) throw new Error("Failed to submit");
-      showToast({ title: "Enquiry Submitted!", description: "We'll get back to you soon.", status: "success" });
-      setFormData({ parentName: "", email: "", phone: "", childName: "", childAge: "", message: "" });
-    } catch (error) {
+      showToast({ title: "Enquiry submitted!", description: "We'll get back to you soon.", status: "success" });
+      setFormData(emptyForm);
+    } catch {
       showToast({
-        title: "Error",
-        description: "Set up Formspree (formspree.io) or VITE_CONTACT_API in .env. See README.",
+        title: "Could not send online",
+        description: "Opening email instead so your enquiry still goes through.",
         status: "error",
       });
+      window.location.href = buildMailtoHref(formData, school.contact.email);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  const contactCards = [
-    { icon: FaPhone, title: "Phone", value: "+91 1234567890" },
-    { icon: FaEnvelope, title: "Email", value: "info@dollyangels.com" },
-    { icon: FaMapMarkerAlt, title: "Address", value: "123 School Street, Your City", value2: "State, PIN: 123456" },
-  ];
-
   return (
-    <div className="min-h-[90vh] py-8 md:py-10 px-4 bg-muted/50">
+    <div className="min-h-[90vh] py-8 md:py-10 px-4">
       <div className="max-w-7xl mx-auto">
         <motion.div
           className="text-center mb-10"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 200, damping: 25 }}
         >
-          <h1 className="text-2xl font-heading font-bold text-primary mb-2">Contact Us</h1>
-          <p className="text-xl text-muted-foreground max-w-[800px] mx-auto">
-            We&apos;d love to hear from you! Please fill out the form below for any enquiries about admissions or our programs.
+          <h1 className="text-3xl font-heading font-bold text-primary mb-2">Contact us</h1>
+          <p className="text-lg text-muted-foreground max-w-[800px] mx-auto">
+            We&apos;d love to hear from you. Ask about admissions, a visit, or our programs.
           </p>
         </motion.div>
 
@@ -89,63 +94,94 @@ function ContactPage() {
             className="bg-card rounded-2xl p-6 md:p-8 shadow-xl border border-border"
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.1, type: "spring", stiffness: 150 }}
           >
-            <form onSubmit={handleSubmit} className="space-y-4">
+            <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+              {formError && (
+                <p role="alert" className="text-sm text-destructive bg-destructive/10 rounded-xl px-3 py-2">
+                  {formError}
+                </p>
+              )}
               <div className="space-y-2">
-                <Label htmlFor="parentName">Parent&apos;s Name *</Label>
-                <Input id="parentName" name="parentName" value={formData.parentName} onChange={handleInputChange} placeholder="Enter parent's name" required />
+                <Label htmlFor="parentName">Parent&apos;s name *</Label>
+                <Input id="parentName" name="parentName" value={formData.parentName} onChange={handleInputChange} placeholder="Enter parent's name" autoComplete="name" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="email">Email *</Label>
-                <Input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="Enter your email" required />
+                <Input id="email" name="email" type="email" value={formData.email} onChange={handleInputChange} placeholder="you@example.com" autoComplete="email" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="phone">Phone Number *</Label>
-                <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleInputChange} placeholder="Enter your phone number" required />
+                <Label htmlFor="phone">Phone number *</Label>
+                <Input id="phone" name="phone" type="tel" value={formData.phone} onChange={handleInputChange} placeholder="10-digit mobile number" autoComplete="tel" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="childName">Child&apos;s Name</Label>
-                <Input id="childName" name="childName" value={formData.childName} onChange={handleInputChange} placeholder="Enter child's name" />
+                <Label htmlFor="childName">Child&apos;s name</Label>
+                <Input id="childName" name="childName" value={formData.childName} onChange={handleInputChange} placeholder="Optional" />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="childAge">Child&apos;s Age</Label>
-                <Input id="childAge" name="childAge" type="number" value={formData.childAge} onChange={handleInputChange} placeholder="Enter child's age" />
+                <Label htmlFor="childAge">Child&apos;s age</Label>
+                <Input id="childAge" name="childAge" type="number" min="1" max="12" value={formData.childAge} onChange={handleInputChange} placeholder="Optional" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="message">Message</Label>
-                <Textarea id="message" name="message" value={formData.message} onChange={handleInputChange} placeholder="Any specific questions or concerns?" rows={4} />
+                <Textarea id="message" name="message" value={formData.message} onChange={handleInputChange} placeholder="Any specific questions?" rows={4} />
               </div>
-              <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-                  {isSubmitting ? "Sending..." : "Submit Enquiry"}
-                </Button>
-              </motion.div>
+              <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
+                {isSubmitting ? "Sending..." : apiReady ? "Submit enquiry" : "Send via email"}
+              </Button>
+              {!apiReady && (
+                <p className="text-xs text-muted-foreground text-center">
+                  This opens your email app with the enquiry filled in. Set Formspree in `.env` to send from the site.
+                </p>
+              )}
             </form>
           </motion.div>
 
           <div className="space-y-6">
-            {contactCards.map((card, i) => (
-              <motion.div
-                key={card.title}
-                className="bg-card rounded-2xl p-6 shadow-md border border-border"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.2 + i * 0.08, type: "spring", stiffness: 150 }}
-                whileHover={{ y: -4, boxShadow: "0 10px 15px -3px rgba(0,0,0,0.1)" }}
-              >
-                <div className="flex gap-4">
-                  <motion.div whileHover={{ scale: 1.1, rotate: 5 }} transition={{ type: "spring", stiffness: 400 }}>
-                    <card.icon className="w-6 h-6 text-primary shrink-0" />
-                  </motion.div>
-                  <div>
-                    <p className="font-heading font-bold">{card.title}</p>
-                    <p className="text-muted-foreground">{card.value}</p>
-                    {card.value2 && <p className="text-muted-foreground">{card.value2}</p>}
-                  </div>
+            <a href={school.contact.phoneHref} className="block bg-card rounded-2xl p-6 shadow-md border border-border hover:border-primary">
+              <div className="flex gap-4">
+                <FaPhone className="w-6 h-6 text-primary shrink-0" />
+                <div>
+                  <p className="font-heading font-bold">Phone</p>
+                  <p className="text-muted-foreground">{school.contact.phone}</p>
                 </div>
-              </motion.div>
-            ))}
+              </div>
+            </a>
+            <a href={`mailto:${school.contact.email}`} className="block bg-card rounded-2xl p-6 shadow-md border border-border hover:border-primary">
+              <div className="flex gap-4">
+                <FaEnvelope className="w-6 h-6 text-primary shrink-0" />
+                <div>
+                  <p className="font-heading font-bold">Email</p>
+                  <p className="text-muted-foreground">{school.contact.email}</p>
+                </div>
+              </div>
+            </a>
+            <a href={school.contact.mapUrl} target="_blank" rel="noreferrer" className="block bg-card rounded-2xl p-6 shadow-md border border-border hover:border-primary">
+              <div className="flex gap-4">
+                <FaMapMarkerAlt className="w-6 h-6 text-primary shrink-0" />
+                <div>
+                  <p className="font-heading font-bold">Address</p>
+                  {school.contact.addressLines.map((line) => (
+                    <p key={line} className="text-muted-foreground">
+                      {line}
+                    </p>
+                  ))}
+                  <p className="text-sm text-primary mt-1">Open in Maps →</p>
+                </div>
+              </div>
+            </a>
+            <div className="bg-card rounded-2xl p-6 shadow-md border border-border">
+              <div className="flex gap-4">
+                <FaClock className="w-6 h-6 text-primary shrink-0" />
+                <div>
+                  <p className="font-heading font-bold">Office hours</p>
+                  {school.hours.map((row) => (
+                    <p key={row.days} className="text-muted-foreground">
+                      {row.days}: {row.time}
+                    </p>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

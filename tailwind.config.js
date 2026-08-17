@@ -5,7 +5,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        heading: ['"Fredoka One"', '"Nunito"', "system-ui", "sans-serif"],
+        heading: ['"Fredoka"', '"Fredoka One"', '"Nunito"', "system-ui", "sans-serif"],
         body: ['"Nunito"', "system-ui", "sans-serif"],
       },
       colors: {

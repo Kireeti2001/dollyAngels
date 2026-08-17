@@ -1,48 +1,51 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { supabase, hasSupabase } from "../lib/supabase";
 import staticGallery from "../data/gallery.json";
 
 const ADMIN_API = "/.netlify/functions/admin-gallery";
 
 export function useGalleryData() {
-  const [albums, setAlbums] = useState([]);
+  const [albums, setAlbums] = useState(hasSupabase ? [] : staticGallery.albums || []);
   const [loading, setLoading] = useState(hasSupabase);
   const [error, setError] = useState(null);
 
-  useEffect(() => {
+  const reload = useCallback(async () => {
     if (!hasSupabase || !supabase) {
       setAlbums(staticGallery.albums || []);
       setLoading(false);
       return;
     }
-    async function fetchAlbums() {
-      try {
-        const { data, error: e } = await supabase
-          .from("gallery_albums")
-          .select("*")
-          .order("created_at", { ascending: false });
-        if (e) throw e;
-        setAlbums(
-          (data || []).map((row) => ({
-            id: row.id,
-            title: row.title,
-            description: row.description || "",
-            coverImage: row.cover_image_url || row.image_urls?.[0],
-            images: row.image_urls || [],
-            date: row.created_at?.slice(0, 7) || "",
-          }))
-        );
-      } catch (err) {
-        setError(err.message);
-        setAlbums(staticGallery.albums || []);
-      } finally {
-        setLoading(false);
-      }
+    setLoading(true);
+    try {
+      const { data, error: e } = await supabase
+        .from("gallery_albums")
+        .select("*")
+        .order("created_at", { ascending: false });
+      if (e) throw e;
+      setAlbums(
+        (data || []).map((row) => ({
+          id: row.id,
+          title: row.title,
+          description: row.description || "",
+          coverImage: row.cover_image_url || row.image_urls?.[0],
+          images: row.image_urls || [],
+          date: row.created_at?.slice(0, 7) || "",
+        }))
+      );
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+      setAlbums(staticGallery.albums || []);
+    } finally {
+      setLoading(false);
     }
-    fetchAlbums();
   }, []);
 
-  return { albums, loading, error };
+  useEffect(() => {
+    reload();
+  }, [reload]);
+
+  return { albums, loading, error, reload };
 }
 
 export async function adminGalleryApi({ pin, action, ...payload }) {

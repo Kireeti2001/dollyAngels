@@ -1,34 +1,9 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-
-const activityCards = [
-  {
-    emoji: "🎨",
-    title: "Art Zone",
-    desc: "Paint your dreams in our colorful art studio!",
-    bg: "linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%)",
-    color: "#5a3d7a",
-  },
-  {
-    emoji: "🏃",
-    title: "Active Play",
-    desc: "Jump, run, and play in our safe playground!",
-    bg: "linear-gradient(135deg, #a8edea 0%, #fed6e3 100%)",
-    color: "#2d5a4a",
-  },
-  {
-    emoji: "📚",
-    title: "Story Time",
-    desc: "Discover magical worlds through books!",
-    bg: "linear-gradient(135deg, #d299c2 0%, #fef9d7 100%)",
-    color: "#4a2d5a",
-  },
-];
-
-const events = [
-  { emoji: "🎪", text: "School Carnival - June 15th" },
-  { emoji: "🎓", text: "Graduation Day - July 1st" },
-];
+import { Button } from "../../components/ui/button";
+import school from "../../lib/school";
+import { formatEventDate } from "../../lib/contact.mjs";
 
 const container = {
   hidden: { opacity: 0 },
@@ -41,112 +16,83 @@ function HomePage() {
   return (
     <div className="py-8 md:py-16 px-4 md:px-6">
       <div className="max-w-7xl mx-auto">
-        <motion.div
-          className="text-center mb-12"
-          variants={container}
-          initial="hidden"
-          animate="show"
-        >
+        <motion.div className="text-center mb-12" variants={container} initial="hidden" animate="show">
           <motion.div variants={item}>
-            <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.1 }}
-            >
-              <h1 className="text-2xl md:text-3xl font-bold font-heading mb-4 bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
-                Welcome to Dolly Angels School!
-              </h1>
-            </motion.div>
+            <img
+              src="/logo.svg"
+              alt=""
+              className="w-28 h-auto mx-auto mb-4 drop-shadow-lg"
+              width="140"
+              height="102"
+            />
+            <h1 className="text-3xl md:text-4xl font-bold font-heading mb-4 bg-gradient-to-r from-purple-600 to-pink-500 bg-clip-text text-transparent">
+              Welcome to {school.name}!
+            </h1>
           </motion.div>
-          <motion.div variants={item}>
-            <p className="text-xl text-orange-500 font-bold">Where Learning is an Adventure! 🌈</p>
+          <motion.p variants={item} className="text-xl text-orange-500 font-bold">
+            {school.tagline} 🌈
+          </motion.p>
+          <motion.div variants={item} className="mt-6 flex flex-wrap gap-3 justify-center">
+            <Button asChild size="lg">
+              <Link to="/contact">Enquire about admission</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link to="/programs">See programs</Link>
+            </Button>
+            <Button asChild size="lg" variant="secondary">
+              <Link to="/gallery">View gallery</Link>
+            </Button>
           </motion.div>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
-          {activityCards.map((card, i) => (
-            <motion.div
-              key={card.title}
-              className="p-6 rounded-2xl shadow-xl text-[length:inherit]"
-              style={{ background: card.bg, color: card.color }}
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                delay: 0.2 + i * 0.12,
-                type: "spring",
-                stiffness: 180,
-                damping: 22,
-              }}
-              whileHover={{
-                y: -8,
-                scale: 1.02,
-                rotate: 2,
-                boxShadow: "0 25px 50px -12px rgba(0,0,0,0.25)",
-                transition: { type: "spring", stiffness: 300, damping: 25 },
-              }}
-              whileTap={{ scale: 0.98 }}
-            >
+          {school.activities.map((card, i) => (
+            <Link key={card.title} to={card.href} className="no-underline">
               <motion.div
-                animate={{ rotate: [0, 5, -5, 0] }}
-                transition={{ duration: 2.5, repeat: Infinity, repeatDelay: 2, delay: i * 0.3 }}
-                className="inline-block"
+                className="p-6 rounded-2xl shadow-xl h-full bg-gradient-to-br from-amber-100 to-pink-100 dark:from-purple-900/60 dark:to-pink-900/40 text-foreground"
+                initial={{ opacity: 0, y: 30 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.2 + i * 0.12, type: "spring", stiffness: 180, damping: 22 }}
+                whileHover={{ y: -8, scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <span className="text-4xl block mb-3">{card.emoji}</span>
+                <span className="text-4xl block mb-3" aria-hidden>
+                  {card.emoji}
+                </span>
+                <h2 className="text-lg font-heading font-semibold mb-2">{card.title}</h2>
+                <p className="text-sm">{card.desc}</p>
               </motion.div>
-              <h2 className="text-lg font-heading font-semibold mb-2">{card.title}</h2>
-              <p className="text-sm">{card.desc}</p>
-            </motion.div>
+            </Link>
           ))}
         </div>
 
-        <motion.div
+        <motion.section
           className="bg-card border border-border rounded-2xl p-8 mb-12 shadow-xl"
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, type: "spring", stiffness: 150 }}
+          transition={{ delay: 0.5 }}
         >
-          <h2 className="text-xl font-heading font-bold text-primary mb-6">Upcoming Events</h2>
-          <div className="flex flex-wrap gap-4 justify-center">
-            {events.map((ev, i) => (
-              <motion.div
-                key={ev.text}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{
-                  delay: 0.7 + i * 0.1,
-                  type: "spring",
-                  stiffness: 300,
-                  damping: 20,
-                }}
-                whileHover={{ scale: 1.06, y: -4 }}
-                whileTap={{ scale: 0.98 }}
-                className="bg-secondary border-2 border-border rounded-xl p-4 font-semibold"
-              >
-                {ev.emoji} {ev.text}
-              </motion.div>
+          <h2 className="text-xl font-heading font-bold text-primary mb-6 text-center">Upcoming events</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {school.events.map((ev) => (
+              <div key={ev.title} className="bg-secondary border border-border rounded-xl p-4">
+                <p className="font-semibold">
+                  {ev.emoji} {ev.title}
+                </p>
+                <p className="text-sm text-muted-foreground mt-1">{formatEventDate(ev.date)}</p>
+                <p className="text-sm mt-2">{ev.blurb}</p>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </motion.section>
 
-        <motion.div
-          className="text-center"
-          initial={{ opacity: 0, scale: 0.9 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.9, type: "spring", stiffness: 150 }}
-        >
-          <motion.div
-            animate={{ y: [0, -8, 0] }}
-            transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
-            className="inline-block"
-          >
-            <img
-              src="https://images.unsplash.com/photo-1517486808906-6ca8b3f04846?w=200"
-              alt="Friendly School Mascot"
-              className="w-[180px] h-[180px] mx-auto rounded-full shadow-xl border-4 border-purple-300"
-            />
-          </motion.div>
-          <p className="mt-2 text-muted-foreground font-bold">Our friendly mascot says Hello! 👋</p>
-        </motion.div>
+        <div className="text-center rounded-2xl border border-border bg-card p-8 shadow-soft">
+          <p className="font-heading text-lg text-primary mb-2">Ready to join our family?</p>
+          <p className="text-muted-foreground mb-4">Tell us about your child — we reply to every enquiry.</p>
+          <Button asChild size="lg">
+            <Link to="/contact">Start an enquiry</Link>
+          </Button>
+        </div>
       </div>
     </div>
   );
