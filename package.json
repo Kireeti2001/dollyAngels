@@ -41,13 +41,7 @@
       "last 1 safari version"
     ]
   },
-  "optionalDependencies": {
-    "@rollup/rollup-linux-x64-gnu": "4.62.4"
-  },
   "overrides": {
     "rollup": "npm:@rollup/wasm-node"
-  },
-  "engines": {
-    "node": ">=20"
   }
 }
