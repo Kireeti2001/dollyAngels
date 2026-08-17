@@ -4,12 +4,6 @@
 
 [build.environment]
   NODE_VERSION = "20"
-  NPM_FLAGS = "--include=dev --include=optional"
-
-[functions]
-  directory = "netlify/functions"
-  node_bundler = "esbuild"
-  external_node_modules = ["@supabase/supabase-js"]
 
 [[redirects]]
   from = "/*"
