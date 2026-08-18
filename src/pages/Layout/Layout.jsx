@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import Navbar from "../../components/Navbar/Navbar";
 import Footer from "../../components/Footer/Footer";
 import ParticlesBackground from "../../components/ParticlesBackground";
@@ -18,6 +18,8 @@ function Layout() {
   const pageTransition = prefersReducedMotion
     ? { duration: 0 }
     : { duration: 0.5, ease: easing };
+  const { scrollYProgress } = useScroll();
+  const smoothProgress = useSpring(scrollYProgress, { stiffness: 140, damping: 26, mass: 0.4 });
 
   useEffect(() => {
     if (location.hash) {
@@ -39,6 +41,11 @@ function Layout() {
       >
         Skip to content
       </a>
+      <motion.div
+        aria-hidden
+        className="fixed top-0 left-0 right-0 h-1 z-[1001] origin-left bg-primary"
+        style={{ scaleX: prefersReducedMotion ? scrollYProgress : smoothProgress }}
+      />
       <div className="fixed inset-0 z-0 pointer-events-none opacity-70">
         <ParticlesBackground />
       </div>

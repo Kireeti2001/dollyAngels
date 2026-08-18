@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { FaArrowRight } from "react-icons/fa";
 import { Button } from "../../components/ui/button";
-import { Reveal, MotionCard } from "../../components/ui/motion";
+import { Reveal, MotionCard, CountUp } from "../../components/ui/motion";
 import school from "../../lib/school";
 
 function AboutPage() {
@@ -73,7 +73,7 @@ function AboutPage() {
               viewport={{ once: true }}
               transition={{ type: "spring", stiffness: 300, damping: 18, delay: i * 0.05 }}
             >
-              {stat.number}
+              <CountUp value={stat.number} />
             </motion.p>
             <p className="text-sm font-bold mt-1">{stat.label}</p>
           </MotionCard>

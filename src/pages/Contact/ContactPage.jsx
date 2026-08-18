@@ -153,7 +153,12 @@ function ContactPage() {
               <Textarea id="message" name="message" value={formData.message} onChange={handleInputChange} placeholder="Any specific questions?" rows={4} />
             </div>
             <Button type="submit" size="lg" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? "Sending…" : apiReady ? "Submit enquiry" : "Send via email"} <FaArrowRight className="h-4 w-4" />
+              {isSubmitting ? "Sending…" : apiReady ? "Submit enquiry" : "Send via email"}{" "}
+              {isSubmitting ? (
+                <span className="h-4 w-4 rounded-full border-2 border-current border-t-transparent animate-spin" aria-hidden />
+              ) : (
+                <FaArrowRight className="h-4 w-4" />
+              )}
             </Button>
             <Button type="button" variant="outline" size="lg" className="w-full" onClick={handleWhatsApp}>
               <FaWhatsapp className="h-5 w-5" aria-hidden /> Send on WhatsApp
