@@ -86,7 +86,9 @@ export function CountUp({ value, duration = 2, className }) {
     if (!inView || reduce || target === null) return undefined;
     const controls = animate(0, target, {
       duration,
-      ease: easing,
+      // Gentler curve than the site easing, which front-loads ~70% of the change
+      // and makes the counting imperceptible.
+      ease: "easeOut",
       onUpdate: (v) => setDisplay(Math.round(v)),
     });
     return () => controls.stop();
