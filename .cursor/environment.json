@@ -1,0 +1,11 @@
+{
+  "name": "Dolly Angels",
+  "install": "npm ci && npm install --no-save \"@rollup/rollup-linux-x64-gnu@$(node -p 'require(\"./node_modules/vite/node_modules/rollup/package.json\").version')\"",
+  "terminals": [
+    {
+      "name": "dev server",
+      "command": "npm run dev"
+    }
+  ],
+  "ports": [3000]
+}
