@@ -17,6 +17,20 @@ const menuItems = [
   { path: "/contact", icon: FaEnvelope, text: "Contact" },
 ];
 
+function ThemeIcon({ theme }) {
+  return (
+    <motion.span
+      key={theme}
+      className="flex"
+      initial={{ rotate: -90, scale: 0.5, opacity: 0 }}
+      animate={{ rotate: 0, scale: 1, opacity: 1 }}
+      transition={{ type: "spring", stiffness: 300, damping: 18 }}
+    >
+      {theme === "light" ? <FaMoon className="h-4 w-4" /> : <FaSun className="h-4 w-4" />}
+    </motion.span>
+  );
+}
+
 function Navbar() {
   const { theme, toggleTheme } = useTheme();
   const location = useLocation();
@@ -37,20 +51,28 @@ function Navbar() {
               to={item.path}
               aria-current={isActive(item.path) ? "page" : undefined}
               className={cn(
-                "rounded-full px-4 py-2 text-sm font-bold min-h-[40px] flex items-center transition-colors",
+                "relative rounded-full px-4 py-2 text-sm font-bold min-h-[40px] flex items-center transition-colors",
                 isActive(item.path)
-                  ? "bg-foreground text-background"
+                  ? "text-background"
                   : "text-muted-foreground hover:text-foreground hover:bg-muted"
               )}
             >
-              {item.text}
+              {isActive(item.path) && (
+                <motion.span
+                  layoutId="nav-active-pill"
+                  className="absolute inset-0 rounded-full bg-foreground"
+                  transition={{ type: "spring", stiffness: 400, damping: 32 }}
+                  aria-hidden
+                />
+              )}
+              <span className="relative z-10">{item.text}</span>
             </Link>
           ))}
         </nav>
 
         <div className="hidden md:flex items-center gap-2">
           <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
-            {theme === "light" ? <FaMoon className="h-4 w-4" /> : <FaSun className="h-4 w-4" />}
+            <ThemeIcon theme={theme} />
           </Button>
           <Button asChild size="sm">
             <Link to="/contact">
@@ -62,7 +84,7 @@ function Navbar() {
         {/* Mobile */}
         <div className="flex md:hidden items-center gap-2">
           <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
-            {theme === "light" ? <FaMoon className="h-4 w-4" /> : <FaSun className="h-4 w-4" />}
+            <ThemeIcon theme={theme} />
           </Button>
           <Sheet open={sheetOpen} onOpenChange={setSheetOpen}>
             <SheetTrigger asChild>

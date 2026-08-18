@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion, useInView, animate } from "framer-motion";
 
 export const easing = [0.22, 1, 0.36, 1];
 
@@ -68,6 +69,35 @@ export function MotionCard({ children, className, delay = 0 }) {
     >
       {children}
     </motion.div>
+  );
+}
+
+export function CountUp({ value, duration = 2, className }) {
+  const reduce = useReducedMotion();
+  const ref = useRef(null);
+  // Fire only once the number is well inside the viewport, so the count is actually seen.
+  const inView = useInView(ref, { once: true, margin: "0px 0px -120px 0px" });
+  const match = String(value).match(/^(\d+)(.*)$/);
+  const target = match ? Number(match[1]) : null;
+  const suffix = match ? match[2] : "";
+  const [display, setDisplay] = useState(reduce || target === null ? value : 0);
+
+  useEffect(() => {
+    if (!inView || reduce || target === null) return undefined;
+    const controls = animate(0, target, {
+      duration,
+      // Gentler curve than the site easing, which front-loads ~70% of the change
+      // and makes the counting imperceptible.
+      ease: "easeOut",
+      onUpdate: (v) => setDisplay(Math.round(v)),
+    });
+    return () => controls.stop();
+  }, [inView, reduce, target, duration]);
+
+  return (
+    <span ref={ref} className={className}>
+      {target === null ? value : `${display}${suffix}`}
+    </span>
   );
 }
 

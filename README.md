@@ -44,6 +44,14 @@ To collect submissions in your inbox automatically:
    VITE_CONTACT_API=https://formspree.io/f/YOUR_FORM_ID
    ```
 
+### Automatic WhatsApp reply
+
+**Send on WhatsApp** opens WhatsApp with the enquiry pre-filled, so the free WhatsApp Business app
+can auto-reply with its Greeting message — no code or account needed. For a reply sent straight
+from the server, point `VITE_CONTACT_API` at `/.netlify/functions/enquiry` and add your Meta Cloud
+API keys. Both routes are in
+[docs/WHATSAPP_AUTOREPLY_SETUP.md](docs/WHATSAPP_AUTOREPLY_SETUP.md).
+
 ---
 
 ## Hosting
