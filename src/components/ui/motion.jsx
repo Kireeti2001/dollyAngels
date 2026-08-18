@@ -72,10 +72,11 @@ export function MotionCard({ children, className, delay = 0 }) {
   );
 }
 
-export function CountUp({ value, duration = 1.4, className }) {
+export function CountUp({ value, duration = 2, className }) {
   const reduce = useReducedMotion();
   const ref = useRef(null);
-  const inView = useInView(ref, { once: true, margin: "-40px" });
+  // Fire only once the number is well inside the viewport, so the count is actually seen.
+  const inView = useInView(ref, { once: true, margin: "0px 0px -120px 0px" });
   const match = String(value).match(/^(\d+)(.*)$/);
   const target = match ? Number(match[1]) : null;
   const suffix = match ? match[2] : "";
